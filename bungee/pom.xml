@@ -4,10 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>co.neweden</groupId>
+        <artifactId>Perks</artifactId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+
     <groupId>co.neweden</groupId>
-    <artifactId>Perks</artifactId>
+    <artifactId>Perks-Bungee</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <packaging>pom</packaging>
     <build>
         <plugins>
             <plugin>
@@ -21,22 +26,6 @@
         </plugins>
     </build>
 
-    <modules>
-        <module>bungee</module>
-        <module>bukkit</module>
-    </modules>
-
-    <repositories>
-        <repository>
-            <id>bungee-repo</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </repository>
-        <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-
-    </repositories>
     <dependencies>
         <dependency>
             <groupId>net.md-5</groupId>
