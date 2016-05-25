@@ -1,6 +1,6 @@
-name: PerksBukkit
-main: co.neweden.PerksBukkitBukkit.Main
+name: Perks
+main: co.neweden.Perks.Main
 author: AaronMcH
-description: PerksBukkit plugin for New Eden
+description: Perks plugin for New Eden
 website: https://neweden.co/
 version: 0.1
