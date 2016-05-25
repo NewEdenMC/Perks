@@ -1,7 +1,14 @@
 package co.neweden.Perks;
 
-public class Main {
+import co.neweden.menugui.MenuGUI;
+import org.bukkit.plugin.java.JavaPlugin;
 
+public class Main extends JavaPlugin {
 
+    @Override
+    public void onEnable() {
+        Perks.plugin = this;
+        Perks.perksMenu = MenuGUI.newMenu("perks");
+    }
 
 }
