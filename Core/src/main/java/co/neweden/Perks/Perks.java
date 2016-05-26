@@ -3,8 +3,11 @@ package co.neweden.Perks;
 import co.neweden.menugui.menu.Menu;
 import org.bukkit.entity.Player;
 
+import java.sql.Connection;
+
 public class Perks {
 
+    protected static Connection db;
     protected static Main plugin;
     protected static Menu perksMenu;
 
