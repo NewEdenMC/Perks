@@ -22,7 +22,7 @@
     </build>
 
     <modules>
-        <module>Perks</module>
+        <module>Core</module>
     </modules>
 
     <repositories>
