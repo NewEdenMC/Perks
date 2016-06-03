@@ -46,7 +46,7 @@ public class Perks {
 
     public static void setBalance(Player player, Double newBalance) {
         try {
-            db.createStatement().executeUpdate("REPLACE INTO players SET balance='" + newBalance + "' WHERE uuid='" + player.getUniqueId() + "';");
+            db.createStatement().executeUpdate("REPLACE INTO players SET uuid='" + player.getUniqueId() + "', balance='" + newBalance + "';");
         } catch (SQLException e) {
             getPlugion().getLogger().log(Level.SEVERE, "An SQL Exception occurred while trying to set the balance for " + player.getName(), e);
         }
