@@ -99,6 +99,13 @@ public class Main extends JavaPlugin implements Listener {
                     "  PRIMARY KEY (`uuid`)\n" +
                     ");"
             );
+            Perks.db.createStatement().execute(
+                    "CREATE TABLE IF NOT EXISTS `config` (\n" +
+                    "  `setting` VARCHAR(128) NOT NULL,\n" +
+                    "  `value` VARCHAR(256) NOT NULL,\n" +
+                    "  PRIMARY KEY (`setting`)\n" +
+                    ");"
+            );
         } catch (SQLException e) {
             getLogger().log(Level.SEVERE, "Unable to setup setup database", e);
             return false;

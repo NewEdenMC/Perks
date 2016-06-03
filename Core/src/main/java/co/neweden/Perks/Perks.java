@@ -52,4 +52,23 @@ public class Perks {
         }
     }
 
+    public static String getConfigSetting(String setting) {
+        try {
+            ResultSet rs = db.createStatement().executeQuery("SELECT value FROM config WHERE setting='" + setting + "';");
+            if (rs.next())
+                return rs.getString("value");
+        } catch (SQLException e) {
+            getPlugion().getLogger().log(Level.SEVERE, "An SQL Exception occurred while trying to get the config setting '" + setting + "'", e);
+        }
+        return null;
+    }
+
+    public static void setConfigSetting(String setting, String value) {
+        try {
+            db.createStatement().executeUpdate("REPLACE INTO config SET setting='" + setting + "', value='" + value + "';");
+        } catch (SQLException e) {
+            getPlugion().getLogger().log(Level.SEVERE, "An SQL Exception occurred while trying to set the config setting '" + setting + "' to '" + value + "'", e);
+        }
+    }
+
 }
