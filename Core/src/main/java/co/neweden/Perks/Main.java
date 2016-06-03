@@ -15,7 +15,6 @@ import java.lang.reflect.Type;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -93,6 +92,13 @@ public class Main extends JavaPlugin implements Listener {
                     "  PRIMARY KEY (`id`)\n" +
                     ");"
             );
+            Perks.db.createStatement().execute(
+                    "CREATE TABLE IF NOT EXISTS `players` (\n" +
+                    "  `uuid` varchar(36) NOT NULL,\n" +
+                    "  `balance` double NOT NULL DEFAULT 0,\n" +
+                    "  PRIMARY KEY (`uuid`)\n" +
+                    ");"
+            );
         } catch (SQLException e) {
             getLogger().log(Level.SEVERE, "Unable to setup setup database", e);
             return false;
@@ -124,7 +130,7 @@ public class Main extends JavaPlugin implements Listener {
             getLogger().info("No perks loaded from database");
         else {
             int rows = ((9 - (topSlot % 9)) + topSlot) / 9;
-            Perks.getPerksMenu().setNumRows(rows);
+            Perks.getPerksMenu().setNumRows(rows + 1);
         }
         return true;
     }
@@ -175,6 +181,10 @@ public class Main extends JavaPlugin implements Listener {
             if (perk.getMenuAnimationJSON() != null)
                 slot.animationFromJSON(perk.getMenuAnimationJSON());
         }
+        int balanceSlot = (i.getMenu().getNumRows() * 9) - 5;
+        i.getSlot(balanceSlot)
+                .setMaterial(Material.GOLD_INGOT)
+                .setDisplayName("&6&lYour current balance is &e&l" + Perks.getBalance(event.getOpener()));
     }
 
 }
