@@ -82,7 +82,15 @@ public class Main extends JavaPlugin implements Listener {
                     "  `menuMaterial` VARCHAR(128) NOT NULL,\n" +
                     "  `menuAnimationJSON` BLOB NULL,\n" +
                     "  `availableRealmsJSON` BLOB NULL,\n" +
-                    "  PRIMARY KEY (`name`)" +
+                    "  PRIMARY KEY (`name`)\n" +
+                    ");"
+            );
+            Perks.db.createStatement().execute(
+                    "CREATE TABLE IF NOT EXISTS `perk_permissions` (\n" +
+                    "  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
+                    "  `perkName` varchar(64) NOT NULL,\n" +
+                    "  `permissionNode` varchar(256) NOT NULL,\n" +
+                    "  PRIMARY KEY (`id`)\n" +
                     ");"
             );
         } catch (SQLException e) {
@@ -94,14 +102,18 @@ public class Main extends JavaPlugin implements Listener {
 
     private boolean loadPerks() {
         getLogger().info("Preparing to load perks from database");
-        ResultSet rs;
         int topSlot = 0;
         try {
-            rs = Perks.db.createStatement().executeQuery("SELECT * FROM perks;");
-            while (rs.next()) {
-                Perk perk = loadPerk(rs);
+            ResultSet perks = Perks.db.createStatement().executeQuery("SELECT * FROM perks;");
+            ResultSet perms = Perks.db.createStatement().executeQuery("SELECT * FROM perk_permissions;");
+            while (perks.next()) {
+                Perk perk = loadPerk(perks);
                 if (perk == null) continue;
                 if (perk.getMenuSlot() > topSlot) topSlot = perk.getMenuSlot();
+                while (perms.next()) {
+                    if (!perms.getString("perkName").equals(perk.getName())) continue;
+                    perk.addPermission(perms.getString("permissionNode"));
+                }
                 getLogger().info("Perk " + perk.getName() + " loaded");
             }
         } catch (SQLException e) {
