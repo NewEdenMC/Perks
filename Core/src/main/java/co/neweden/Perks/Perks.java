@@ -52,15 +52,16 @@ public class Perks {
         }
     }
 
-    public static String getConfigSetting(String setting) {
+    public static String getConfigSetting(String setting) { return getConfigSetting(setting, null); }
+    public static String getConfigSetting(String setting, String defValue) {
         try {
             ResultSet rs = db.createStatement().executeQuery("SELECT value FROM config WHERE setting='" + setting + "';");
             if (rs.next())
-                return rs.getString("value");
+                return rs.getString("value") != null ? rs.getString("value") : defValue;
         } catch (SQLException e) {
             getPlugion().getLogger().log(Level.SEVERE, "An SQL Exception occurred while trying to get the config setting '" + setting + "'", e);
         }
-        return null;
+        return defValue;
     }
 
     public static void setConfigSetting(String setting, String value) {
