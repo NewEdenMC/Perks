@@ -1,5 +1,8 @@
 package co.neweden.Perks;
 
+import java.text.DecimalFormat;
+import java.util.regex.Pattern;
+
 public final class Util {
 	
 	private Util() { }
@@ -29,6 +32,23 @@ public final class Util {
 		text = text.replaceAll("&r", "\u00A7r"); // Reset
 		
 		return text;
+	}
+
+	public static String formatCurrency(Double value) {
+		String prefix = Perks.getConfigSetting("currency_prefix", "");
+		if (value == 1)
+			prefix = prefix.replaceAll("(?i)" + Pattern.quote("(s)"), "");
+		else
+			prefix = prefix.replaceAll("(?i)" + Pattern.quote("(s)"), "s");
+
+		String suffix = Perks.getConfigSetting("currency_suffix", "");
+		if (value == 1)
+			suffix = suffix.replaceAll("(?i)" + Pattern.quote("(s)"), "");
+		else
+			suffix = suffix.replaceAll("(?i)" + Pattern.quote("(s)"), "s");
+
+		DecimalFormat df = new DecimalFormat(Perks.getConfigSetting("currency_formatting", "#,##0.00"));
+		return prefix + df.format(value) + suffix;
 	}
 
 }

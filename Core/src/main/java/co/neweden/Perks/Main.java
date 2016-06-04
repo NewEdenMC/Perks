@@ -106,6 +106,9 @@ public class Main extends JavaPlugin implements Listener {
                     "  PRIMARY KEY (`setting`)\n" +
                     ");"
             );
+            Perks.db.createStatement().executeUpdate("INSERT INTO config (`setting`) VALUES ('currency_prefix') ON DUPLICATE KEY UPDATE setting=setting;");
+            Perks.db.createStatement().executeUpdate("INSERT INTO config (`setting`,`value`) VALUES ('currency_formatting','#,##0.00') ON DUPLICATE KEY UPDATE setting=setting;");
+            Perks.db.createStatement().executeUpdate("INSERT INTO config (`setting`,`value`) VALUES ('currency_suffix',' credit(s)') ON DUPLICATE KEY UPDATE setting=setting;");
         } catch (SQLException e) {
             getLogger().log(Level.SEVERE, "Unable to setup setup database", e);
             return false;
@@ -170,7 +173,7 @@ public class Main extends JavaPlugin implements Listener {
             slot
                     .setMaterial(perk.getMenuMaterial())
                     .setDisplayName(perk.getDisplayName())
-                    .addHoverText("&lCost:&f " + perk.getCost());
+                    .addHoverText("&lCost:&f " + Util.formatCurrency(perk.getCost()));
 
             if (!perk.getDescription().isEmpty())
                 slot.addHoverText(perk.getDescription());
@@ -191,7 +194,8 @@ public class Main extends JavaPlugin implements Listener {
         int balanceSlot = (i.getMenu().getNumRows() * 9) - 5;
         i.getSlot(balanceSlot)
                 .setMaterial(Material.GOLD_INGOT)
-                .setDisplayName("&6&lYour current balance is &e&l" + Perks.getBalance(event.getOpener()));
+                .setDisplayName("&6&lYour current balance")
+                .addHoverText("&e&l" + Util.formatCurrency(Perks.getBalance(event.getOpener())));
     }
 
 }
