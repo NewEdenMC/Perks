@@ -44,6 +44,7 @@ public class Main extends JavaPlugin implements Listener {
             return false;
         }
         MenuGUI.unloadMenu(Perks.getPerksMenu());
+        reloadConfig();
         return startup();
     }
 
