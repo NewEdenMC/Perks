@@ -4,3 +4,4 @@ mysql:
    database: perks
    user: mc
    password:
+realmName:

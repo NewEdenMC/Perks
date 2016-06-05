@@ -16,10 +16,13 @@ public class Perks {
 
     protected static Connection db;
     protected static Main plugin;
+    protected static String realmName;
     protected static Menu perksMenu;
     protected static Set<Perk> perks = new HashSet<>();
 
     public static Main getPlugion() { return plugin; }
+
+    public static String getRealmName() { return realmName; }
 
     public static Set<Perk> getPerks() { return new HashSet<>(perks); }
 

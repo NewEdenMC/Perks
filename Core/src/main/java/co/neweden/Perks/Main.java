@@ -30,6 +30,7 @@ public class Main extends JavaPlugin implements Listener {
 
     private boolean startup() {
         saveDefaultConfig();
+        Perks.realmName = getConfig().getString("realmName", "");
         Perks.perksMenu = MenuGUI.newMenu("perks");
         return loadDBConnection() && setupDB() && loadPerks();
     }
@@ -69,6 +70,13 @@ public class Main extends JavaPlugin implements Listener {
 
     private boolean setupDB() {
         try {
+            Perks.db.createStatement().execute(
+                    "CREATE TABLE IF NOT EXISTS `realms` (\n" +
+                    "  `name` varchar(64) NOT NULL,\n" +
+                    "  `displayName` varchar(128) NOT NULL,\n" +
+                    "  PRIMARY KEY (`name`)\n" +
+                    ")"
+            );
             Perks.db.createStatement().execute(
                     "CREATE TABLE IF NOT EXISTS `perks` (\n" +
                     "  `name` VARCHAR(64) NOT NULL,\n" +
