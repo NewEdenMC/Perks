@@ -175,9 +175,9 @@ public class Main extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onMenuPopulate(MenuPopulateEvent event) {
-        MenuInstance i = event.getMenuInstance();
+        MenuInstance instance = event.getMenuInstance();
         for (Perk perk : Perks.getPerks()) {
-            InventorySlot slot = i.getSlot(perk.getMenuSlot());
+            InventorySlot slot = instance.getSlot(perk.getMenuSlot());
             slot
                     .setMaterial(perk.getMenuMaterial())
                     .setDisplayName(perk.getDisplayName())
@@ -193,14 +193,25 @@ public class Main extends JavaPlugin implements Listener {
 
             if (perk.getRealms().isEmpty())
                 slot.addHoverText("&lRealms:&f Can be used in all realms");
-            else
-                slot.addHoverText("&lRealms:&f Can only be used in " + perk.getRealms().toString());
+            else {
+                String realms = "Can be used in ";
+                int i = 0;
+                for (String realm : perk.getRealms()) {
+                    realms += realm;
+                    if (Perks.getRealmName().equals(realm)) realms += " (this realm)";
+                    if (perk.getRealms().size() - 1 != i) realms += ", ";
+                    i++;
+                }
+                slot.addHoverText("&lRealms:&f " + realms);
+                if (!perk.getRealms().contains(Perks.getRealmName()))
+                    slot.addHoverText("&cNote this perk cannot be used in this realm");
+            }
 
             if (perk.getMenuAnimationJSON() != null)
                 slot.animationFromJSON(perk.getMenuAnimationJSON());
         }
-        int balanceSlot = (i.getMenu().getNumRows() * 9) - 5;
-        i.getSlot(balanceSlot)
+        int balanceSlot = (instance.getMenu().getNumRows() * 9) - 5;
+        instance.getSlot(balanceSlot)
                 .setMaterial(Material.GOLD_INGOT)
                 .setDisplayName("&6&lYour current balance")
                 .addHoverText("&e&l" + Util.formatCurrency(Perks.getBalance(event.getOpener())));
