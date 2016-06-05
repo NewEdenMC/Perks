@@ -157,7 +157,7 @@ public class Main extends JavaPlugin implements Listener {
     private Perk loadPerk(ResultSet rs) throws SQLException {
         Perk perk = Perks.newPerk(rs.getString("name"));
         if (rs.getString("displayName") != null) perk.setDisplayName(rs.getString("displayName"));
-        if (rs.getString("description") != null) perk.setDisplayName(rs.getString("description"));
+        if (rs.getString("description") != null) perk.setDescription(rs.getString("description"));
         perk.setCost(rs.getDouble("cost"));
         perk.setMenuSlot(rs.getInt("menuSlot"));
         perk.setOneTimePurchase(rs.getBoolean("oneTimePurchase"));
@@ -181,11 +181,11 @@ public class Main extends JavaPlugin implements Listener {
             InventorySlot slot = instance.getSlot(perk.getMenuSlot());
             slot
                     .setMaterial(perk.getMenuMaterial())
-                    .setDisplayName(perk.getDisplayName())
-                    .addHoverText("&lCost:&f " + Util.formatCurrency(perk.getCost()));
+                    .setDisplayName(perk.getDisplayName());
 
             if (!perk.getDescription().isEmpty())
                 slot.addHoverText(perk.getDescription());
+            slot.addHoverText("&lCost:&f " + Util.formatCurrency(perk.getCost()));
 
             if (perk.isOneTimePurchase())
                 slot.addHoverText("&lDuration:&f Never expires");
