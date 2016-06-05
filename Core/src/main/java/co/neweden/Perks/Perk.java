@@ -6,7 +6,6 @@ import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class Perk {
 
@@ -19,7 +18,7 @@ public class Perk {
     private String menuAnimationJSON;
     private Boolean oneTimePurchase;
     private Integer timeLength;
-    private Collection<String> realms = new ArrayList<>();
+    private Collection<Realm> realms = new ArrayList<>();
     private Collection<String> permissions = new ArrayList<>();
 
     public Perk(String perkName) { name = perkName; }
@@ -54,9 +53,12 @@ public class Perk {
     public Perk setTimeLength(Integer timeLength) { this.timeLength = timeLength; return this; }
     public Integer getTimeLength() { return timeLength; }
 
-    public Perk addRealm(String realmName) { realms.add(realmName); return this; }
-    public Perk addRealms(Collection<String> realmNames) { realms.addAll(realmNames); return this; }
-    public Collection<String> getRealms() { return new ArrayList<>(realms); }
+    public Perk addToRealm(Realm realm) { realms.add(realm); return this; }
+    public Perk addToRealms(Collection<Realm> realm) { realms.addAll(realm); return this; }
+    public Collection<Realm> getMemberRealms() {
+        return isMemberOfAllRealms() ? Perks.getRealms() : new ArrayList<>(realms);
+    }
+    public boolean isMemberOfAllRealms() { return realms.isEmpty(); }
 
     public Perk addPermission(String permissionNode) { permissions.add(permissionNode); return this; }
     public Perk addPermissions(Collection<String> permissionNodes) { permissions.addAll(permissionNodes); return this; }

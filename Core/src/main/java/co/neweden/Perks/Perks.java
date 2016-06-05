@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -16,13 +18,22 @@ public class Perks {
 
     protected static Connection db;
     protected static Main plugin;
-    protected static String realmName;
+    protected static Realm realm;
+    protected static Collection<Realm> realms = new ArrayList<>();
     protected static Menu perksMenu;
     protected static Set<Perk> perks = new HashSet<>();
 
     public static Main getPlugion() { return plugin; }
 
-    public static String getRealmName() { return realmName; }
+    public static Realm getCurrentRealm() { return realm; }
+
+    public static Collection<Realm> getRealms() { return new ArrayList<>(realms); }
+
+    public static Realm newRealm(String realmName) {
+        Realm realm = new Realm(realmName);
+        realms.add(realm);
+        return realm;
+    }
 
     public static Set<Perk> getPerks() { return new HashSet<>(perks); }
 

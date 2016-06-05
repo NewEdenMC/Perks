@@ -30,9 +30,8 @@ public class Main extends JavaPlugin implements Listener {
 
     private boolean startup() {
         saveDefaultConfig();
-        Perks.realmName = getConfig().getString("realmName", "");
         Perks.perksMenu = MenuGUI.newMenu("perks");
-        return loadDBConnection() && setupDB() && loadPerks();
+        return loadDBConnection() && setupDB() && loadRealms() && loadPerks();
     }
 
     public boolean reload() {
@@ -125,6 +124,27 @@ public class Main extends JavaPlugin implements Listener {
         return true;
     }
 
+    private boolean loadRealms() {
+        getLogger().info("Preparing to load realms from database");
+        String configRealm = getConfig().getString("realmName", "");
+        try {
+            ResultSet rs = Perks.db.createStatement().executeQuery("SELECT * FROM realms;");
+            while (rs.next()) {
+                Realm realm = Perks.newRealm(rs.getString("name"));
+                realm.setDisplayName(rs.getString("displayName"));
+                if (realm.getName().equals(configRealm))
+                    Perks.realm = realm;
+                getLogger().info("Realm " + realm.getName() + " loaded");
+            }
+        } catch (SQLException e) {
+            getLogger().log(Level.SEVERE, "SQLException occurred while trying to load realms from database", e);
+            return false;
+        }
+        if (Perks.realms.isEmpty())
+            getLogger().info("No realms loaded from database");
+        return true;
+    }
+
     private boolean loadPerks() {
         getLogger().info("Preparing to load perks from database");
         int topSlot = 0;
@@ -169,7 +189,10 @@ public class Main extends JavaPlugin implements Listener {
             Type listType = new TypeToken<Collection<String>>(){}.getType();
             String json = new String(rs.getBlob("availableRealmsJSON").getBytes(1, (int) rs.getBlob("availableRealmsJSON").length()));
             Collection<String> list = gson.fromJson(json, listType);
-            perk.addRealms(list);
+            for (Realm realm : Perks.getRealms()) {
+                if (list.contains(realm.getName()))
+                    perk.addToRealm(realm);
+            }
         }
         return perk;
     }
@@ -192,19 +215,19 @@ public class Main extends JavaPlugin implements Listener {
             else
                 slot.addHoverText("&lDuration:&f " + perk.getTimeLength());
 
-            if (perk.getRealms().isEmpty())
+            if (perk.isMemberOfAllRealms())
                 slot.addHoverText("&lRealms:&f Can be used in all realms");
             else {
                 String realms = "Can be used in ";
                 int i = 0;
-                for (String realm : perk.getRealms()) {
-                    realms += realm;
-                    if (Perks.getRealmName().equals(realm)) realms += " (this realm)";
-                    if (perk.getRealms().size() - 1 != i) realms += ", ";
+                for (Realm realm : perk.getMemberRealms()) {
+                    realms += realm.getDisplayName();
+                    if (Perks.getCurrentRealm().equals(realm)) realms += " (this realm)";
+                    if (perk.getMemberRealms().size() - 1 != i) realms += ", ";
                     i++;
                 }
                 slot.addHoverText("&lRealms:&f " + realms);
-                if (!perk.getRealms().contains(Perks.getRealmName()))
+                if (!perk.getMemberRealms().contains(Perks.getCurrentRealm()))
                     slot.addHoverText("&cNote this perk cannot be used in this realm");
             }
 
