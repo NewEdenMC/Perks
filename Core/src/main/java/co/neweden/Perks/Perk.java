@@ -19,7 +19,7 @@ public class Perk {
     private String menuAnimationJSON;
     private Boolean oneTimePurchase;
     private Integer timeLength;
-    private List<String> realms = new ArrayList<>();
+    private Collection<String> realms = new ArrayList<>();
     private Collection<String> permissions = new ArrayList<>();
 
     public Perk(String perkName) { name = perkName; }
@@ -56,7 +56,7 @@ public class Perk {
 
     public Perk addRealm(String realmName) { realms.add(realmName); return this; }
     public Perk addRealms(Collection<String> realmNames) { realms.addAll(realmNames); return this; }
-    public List<String> getRealms() { return new ArrayList<>(realms); }
+    public Collection<String> getRealms() { return new ArrayList<>(realms); }
 
     public Perk addPermission(String permissionNode) { permissions.add(permissionNode); return this; }
     public Perk addPermissions(Collection<String> permissionNodes) { permissions.addAll(permissionNodes); return this; }

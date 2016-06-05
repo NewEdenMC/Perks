@@ -15,7 +15,7 @@ import java.lang.reflect.Type;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Collection;
 import java.util.logging.Level;
 
 public class Main extends JavaPlugin implements Listener {
@@ -165,9 +165,9 @@ public class Main extends JavaPlugin implements Listener {
         if (rs.getBlob("menuAnimationJSON") != null) perk.setMenuAnimationJSON(rs.getBlob("menuAnimationJSON"));
         if (rs.getBlob("availableRealmsJSON") != null) {
             Gson gson = new Gson();
-            Type listType = new TypeToken<List<String>>(){}.getType();
+            Type listType = new TypeToken<Collection<String>>(){}.getType();
             String json = new String(rs.getBlob("availableRealmsJSON").getBytes(1, (int) rs.getBlob("availableRealmsJSON").length()));
-            List<String> list = gson.fromJson(json, listType);
+            Collection<String> list = gson.fromJson(json, listType);
             perk.addRealms(list);
         }
         return perk;
