@@ -1,6 +1,8 @@
 package co.neweden.Perks;
 
 import co.neweden.menugui.menu.Menu;
+import org.apache.commons.lang.Validate;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
@@ -33,7 +35,8 @@ public class Perks {
         perksMenu.openMenu(player);
     }
 
-    public static Double getBalance(Player player) {
+    public static Double getBalance(OfflinePlayer player) {
+        Validate.notNull(player, "Null OfflinePlayer object passed to getBalance method");
         try {
             ResultSet rs = db.createStatement().executeQuery("SELECT balance FROM players WHERE uuid='" + player.getUniqueId() + "';");
             if (rs.next())
@@ -44,7 +47,9 @@ public class Perks {
         return 0D;
     }
 
-    public static void setBalance(Player player, Double newBalance) {
+    public static void setBalance(OfflinePlayer player, Double newBalance) {
+        Validate.notNull(player, "Null OfflinePlayer object passed to setBalance method");
+        Validate.notNull(newBalance, "Null Double object passed to setBalance method for newBalance");
         try {
             db.createStatement().executeUpdate("REPLACE INTO players SET uuid='" + player.getUniqueId() + "', balance='" + newBalance + "';");
         } catch (SQLException e) {

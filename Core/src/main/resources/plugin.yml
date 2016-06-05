@@ -9,3 +9,14 @@ commands:
    perks:
       description: Commands to display perks
       permission: perks.perks
+permissions:
+   perks.*:
+      description: Gives all Perks permission nodes
+      default: op
+      children:
+         perks.perks: true
+         perks.admin: true
+   perks.perks:
+      description: User command to see and buy perks
+   perks.admin:
+      description: Gives access to view help pages and administer perks

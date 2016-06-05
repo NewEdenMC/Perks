@@ -1,5 +1,9 @@
 package co.neweden.Perks;
 
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+
 import java.text.DecimalFormat;
 import java.util.regex.Pattern;
 
@@ -49,6 +53,20 @@ public final class Util {
 
 		DecimalFormat df = new DecimalFormat(Perks.getConfigSetting("currency_formatting", "#,##0.00"));
 		return prefix + df.format(value) + suffix;
+	}
+
+	public static OfflinePlayer getOfflinePlayer(String name) {
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			if (player.getName().equals(name))
+				return player;
+		}
+
+		for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
+			if (player.getName().equals(name))
+				return player;
+		}
+
+		return null;
 	}
 
 }
