@@ -1,11 +1,15 @@
 package co.neweden.Perks;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 import java.sql.Blob;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Level;
 
 public class Perk {
 
@@ -63,5 +67,30 @@ public class Perk {
     public Perk addPermission(String permissionNode) { permissions.add(permissionNode); return this; }
     public Perk addPermissions(Collection<String> permissionNodes) { permissions.addAll(permissionNodes); return this; }
     public Collection<String> getPermissions() { return new ArrayList<>(permissions); }
+
+    public enum PurchaseStatus { OWNS_PERK, HAS_ALL_PERMISSIONS, INSUFFICIENT_FUNDS, CAN_PURCHASE }
+
+    public PurchaseStatus purchaseStatus(Player player) {
+        Validate.notNull(player, "Player to check for cannot be null");
+        try {
+            ResultSet rs = Perks.db.createStatement().executeQuery("SELECT purchaseID FROM active_perks WHERE uuid='" + player.getUniqueId() + "';");
+            if (rs.next())
+                return PurchaseStatus.OWNS_PERK;
+        } catch (SQLException e) {
+            Perks.getPlugion().getLogger().log(Level.SEVERE, "An SQLException occurred while trying to get purcahse information.", e);
+        }
+        boolean hasAll = true;
+        for (String perm : getPermissions()) {
+            if (!player.hasPermission(perm))
+                hasAll = false;
+        }
+        if (hasAll)
+            return PurchaseStatus.HAS_ALL_PERMISSIONS;
+
+        if (Perks.getBalance(player) < getCost())
+            return PurchaseStatus.INSUFFICIENT_FUNDS;
+
+        return PurchaseStatus.CAN_PURCHASE;
+    }
 
 }

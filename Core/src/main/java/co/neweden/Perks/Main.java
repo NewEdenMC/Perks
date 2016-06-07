@@ -114,6 +114,25 @@ public class Main extends JavaPlugin implements Listener {
                     "  PRIMARY KEY (`setting`)\n" +
                     ");"
             );
+            Perks.db.createStatement().execute(
+                    "CREATE TABLE IF NOT EXISTS `active_perks` (\n" +
+                    "  `purchaseID` INT NOT NULL AUTO_INCREMENT,\n" +
+                    "  `uuid` VARCHAR(36) NOT NULL,\n" +
+                    "  `perkName` VARCHAR(64) NOT NULL,\n" +
+                    "  `expiresOn` INT NULL,\n" +
+                    "  PRIMARY KEY (`purchaseID`)\n" +
+                    ");"
+            );
+            Perks.db.createStatement().execute(
+                    "CREATE TABLE IF NOT EXISTS `transaction_history` (\n" +
+                    "  `transactionID` INT NOT NULL AUTO_INCREMENT,\n" +
+                    "  `UUID` VARCHAR(36) NOT NULL,\n" +
+                    "  `perkName` VARCHAR(64) NOT NULL,\n" +
+                    "  `purchaseID` INT NOT NULL,\n" +
+                    "  `action` VARCHAR(16) NOT NULL,\n" +
+                    "  PRIMARY KEY (`transactionID`)\n" +
+                    ");"
+            );
             Perks.db.createStatement().executeUpdate("INSERT INTO config (`setting`) VALUES ('currency_prefix') ON DUPLICATE KEY UPDATE setting=setting;");
             Perks.db.createStatement().executeUpdate("INSERT INTO config (`setting`,`value`) VALUES ('currency_formatting','#,##0.00') ON DUPLICATE KEY UPDATE setting=setting;");
             Perks.db.createStatement().executeUpdate("INSERT INTO config (`setting`,`value`) VALUES ('currency_suffix',' credit(s)') ON DUPLICATE KEY UPDATE setting=setting;");
@@ -230,6 +249,15 @@ public class Main extends JavaPlugin implements Listener {
                 if (!perk.getMemberRealms().contains(Perks.getCurrentRealm()))
                     slot.addHoverText("&cNote this perk cannot be used in this realm");
             }
+
+            String statusMessage = "";
+            switch (perk.purchaseStatus(event.getOpener())) {
+                case OWNS_PERK: statusMessage = "&7You already own this perk"; break;
+                case HAS_ALL_PERMISSIONS: statusMessage = "&7You already own this perk"; break;
+                case INSUFFICIENT_FUNDS: statusMessage = "&cYou do not have enough credit to buy this perk"; break;
+                case CAN_PURCHASE: statusMessage = "&aYou can purchase this perk"; break;
+            }
+            slot.addHoverText(Util.formatString(statusMessage));
 
             if (perk.getMenuAnimationJSON() != null)
                 slot.animationFromJSON(perk.getMenuAnimationJSON());
