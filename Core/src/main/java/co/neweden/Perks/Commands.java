@@ -12,11 +12,12 @@ import java.util.UUID;
 public class Commands implements CommandExecutor {
 
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-        if (sender.hasPermission("perks.admin") && args.length > 0) {
+        if (args.length > 0) {
             switch (args[0]) {
                 case "help": helpCommand(sender); break;
                 case "reload": reloadCommand(sender); break;
                 case "balance": balanceCommand(sender, args); break;
+                case "buy": buyCommand(sender, args); break;
                 default: sender.sendMessage(Util.formatString("&cThe sub-command you ran is not valid, for a list of valied sub-commands run: help."));
             }
             return true;
@@ -40,7 +41,8 @@ public class Commands implements CommandExecutor {
                 "&bPerks Sub-commands\n" +
                 "&f- &ahelp&e: display this help screen\n" +
                 "&f- &areload&e: reload the plugin\n" +
-                "&f- &abalance&e: commands to manage player balances"
+                "&f- &abalance&e: commands to manage player balances\n" +
+                "&f- &abuy <perk>&e: purchase the specified perk"
         ));
     }
 
@@ -118,6 +120,46 @@ public class Commands implements CommandExecutor {
             sender.sendMessage(Util.formatString("&a" + Util.formatCurrency(updateBal) + " removed from the balance for '" + args[2] + "', balance is now " + Util.formatCurrency(bal - updateBal)));
         }
 
+    }
+
+    public void buyCommand(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(Util.formatString("&cOnly players can run this command."));
+            return;
+        }
+        if (args.length < 2) {
+            sender.sendMessage(Util.formatString("&cYou did not specify a perk."));
+            return;
+        }
+
+        Perk perk = null;
+        for (Perk p : Perks.getPerks()) {
+            if (p.getName().equalsIgnoreCase(args[1]))
+                perk = p;
+        }
+        if (perk == null) {
+            sender.sendMessage(Util.formatString("&cThe perk you are trying to purchase is not recognised."));
+            return;
+        }
+
+        Player player = (Player) sender;
+        Perk.PurchaseStatus ps = perk.purchaseStatus(player);
+        if (ps.equals(Perk.PurchaseStatus.OWNS_PERK) || ps.equals(Perk.PurchaseStatus.HAS_ALL_PERMISSIONS)) {
+            player.sendMessage(Util.formatString("&cYou currently already own this perk or this perk has been automatically activated based on your current permissions."));
+            return;
+        }
+        if (ps.equals(Perk.PurchaseStatus.INSUFFICIENT_FUNDS)) {
+            player.sendMessage(Util.formatString("&cYou do not have enough credit to buy this perk"));
+            return;
+        }
+        if (ps.equals(Perk.PurchaseStatus.NOT_AVAILABLE_IN_REALM)) {
+            player.sendMessage(Util.formatString("&eWarning you won't be able to use this perk in the realm you are in currently"));
+        }
+
+        if (perk.purchasePerk(player))
+            player.sendMessage(Util.formatString("&aYou have just purchased " + perk.getDisplayName()));
+        else
+            player.sendMessage(Util.formatString("&cAn unknown error occurred while trying to purchase this perk, please contact a member of staff."));
     }
 
 }

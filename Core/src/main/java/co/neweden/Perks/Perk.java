@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -68,10 +69,14 @@ public class Perk {
     public Perk addPermissions(Collection<String> permissionNodes) { permissions.addAll(permissionNodes); return this; }
     public Collection<String> getPermissions() { return new ArrayList<>(permissions); }
 
-    public enum PurchaseStatus { OWNS_PERK, HAS_ALL_PERMISSIONS, INSUFFICIENT_FUNDS, CAN_PURCHASE }
+    public enum PurchaseStatus { NOT_AVAILABLE_IN_REALM, OWNS_PERK, HAS_ALL_PERMISSIONS, INSUFFICIENT_FUNDS, CAN_PURCHASE }
 
     public PurchaseStatus purchaseStatus(Player player) {
         Validate.notNull(player, "Player to check for cannot be null");
+
+        if (!getMemberRealms().contains(Perks.getCurrentRealm()))
+            return PurchaseStatus.NOT_AVAILABLE_IN_REALM;
+
         try {
             ResultSet rs = Perks.db.createStatement().executeQuery("SELECT purchaseID FROM active_perks WHERE uuid='" + player.getUniqueId() + "';");
             if (rs.next())
@@ -91,6 +96,27 @@ public class Perk {
             return PurchaseStatus.INSUFFICIENT_FUNDS;
 
         return PurchaseStatus.CAN_PURCHASE;
+    }
+
+    public boolean purchasePerk(Player player) {
+        if (purchaseStatus(player) != PurchaseStatus.CAN_PURCHASE) return false;
+        Perks.setBalance(player, Perks.getBalance(player) - getCost());
+
+        try {
+            int purchaseID;
+            Statement st = Perks.db.createStatement();
+            st.executeUpdate("INSERT INTO `active_perks` (`uuid`, `perkName`, `expiresOn`) VALUES ('" + player.getUniqueId() + "', '" + getName() + "', '" + getTimeLength() + "');", Statement.RETURN_GENERATED_KEYS);
+            ResultSet rs = st.getGeneratedKeys();
+            if (rs.next()) {
+                purchaseID = rs.getInt(1);
+            } else return false;
+
+            Perks.db.createStatement().executeUpdate("INSERT INTO `transaction_history` (`UUID`, `perkName`, `purchaseID`, `action`) VALUES ('" + player.getUniqueId() + "', '" + getName() + "', '" + purchaseID + "', 'PURCHASE');");
+        } catch (SQLException e) {
+            Perks.getPlugion().getLogger().log(Level.SEVERE, "An SQLException occurred while purchasing a perk.", e);
+            return false;
+        }
+        return true;
     }
 
 }

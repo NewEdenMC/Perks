@@ -178,6 +178,7 @@ public class Main extends JavaPlugin implements Listener {
                     if (!perms.getString("perkName").equals(perk.getName())) continue;
                     perk.addPermission(perms.getString("permissionNode"));
                 }
+                perms.beforeFirst();
                 getLogger().info("Perk " + perk.getName() + " loaded");
             }
         } catch (SQLException e) {
@@ -246,18 +247,20 @@ public class Main extends JavaPlugin implements Listener {
                     i++;
                 }
                 slot.addHoverText("&lRealms:&f " + realms);
-                if (!perk.getMemberRealms().contains(Perks.getCurrentRealm()))
-                    slot.addHoverText("&cNote this perk cannot be used in this realm");
             }
 
             String statusMessage = "";
-            switch (perk.purchaseStatus(event.getOpener())) {
+            Perk.PurchaseStatus ps = perk.purchaseStatus(event.getOpener());
+            switch (ps) {
+                case NOT_AVAILABLE_IN_REALM: statusMessage = "&eThis perk is not available in this realm, you need to be in an available realm to purchase and use it"; break;
                 case OWNS_PERK: statusMessage = "&7You already own this perk"; break;
-                case HAS_ALL_PERMISSIONS: statusMessage = "&7You already own this perk"; break;
+                case HAS_ALL_PERMISSIONS: statusMessage = "&7You automatically have this perk based on your current permissions"; break;
                 case INSUFFICIENT_FUNDS: statusMessage = "&cYou do not have enough credit to buy this perk"; break;
                 case CAN_PURCHASE: statusMessage = "&aYou can purchase this perk"; break;
             }
             slot.addHoverText(Util.formatString(statusMessage));
+            if (ps.equals(Perk.PurchaseStatus.CAN_PURCHASE))
+                slot.setClickCommand("perks buy " + perk.getName());
 
             if (perk.getMenuAnimationJSON() != null)
                 slot.animationFromJSON(perk.getMenuAnimationJSON());
