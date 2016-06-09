@@ -30,19 +30,22 @@ public class Main extends JavaPlugin implements Listener {
 
     private boolean startup() {
         saveDefaultConfig();
-        Perks.perksMenu = MenuGUI.newMenu("perks");
         return loadDBConnection() && setupDB() && loadRealms() && loadPerks();
     }
 
     public boolean reload() {
-        if (!MenuGUI.unloadMenu(Perks.perksMenu)) return false;
+        if (!MenuGUI.unloadMenu(Perks.getRealmsMenu())) return false;
+        for (Realm realm : Perks.getRealms()) {
+            if (!MenuGUI.unloadMenu(realm.getPerksMenu())) return false;
+        }
+        Perks.realms.clear();
+        Perks.perks.clear();
         try {
             Perks.db.close();
         } catch (SQLException e) {
             getLogger().log(Level.SEVERE, "Unable to close database connection", e);
             return false;
         }
-        MenuGUI.unloadMenu(Perks.getPerksMenu());
         reloadConfig();
         return startup();
     }
@@ -161,19 +164,34 @@ public class Main extends JavaPlugin implements Listener {
         }
         if (Perks.realms.isEmpty())
             getLogger().info("No realms loaded from database");
+        Perks.realmsMenu = MenuGUI.newMenu("perks_realms");
+        Perks.getRealmsMenu().setTitle("Realms Selector for Perks");
+        Perks.getRealmsMenu().setNumRows(((9 - (Perks.getRealms().size() % 9)) + Perks.getRealms().size()) / 9);
         return true;
+    }
+
+    @EventHandler
+    public void onRealmsMenuPopulate(MenuPopulateEvent event) {
+        if (!Perks.getRealmsMenu().equals(event.getMenuInstance().getMenu())) return;
+        int slotI = 0;
+        for (Realm realm : Perks.getRealms()) {
+            event.getMenuInstance().getSlot(slotI)
+                    .setMaterial(Material.GRASS)
+                    .setDisplayName(realm.getDisplayName())
+                    .addHoverText("&7Click to see Perks for this realm")
+                    .setClickCommand("perks " + realm.getName());
+            slotI++;
+        }
     }
 
     private boolean loadPerks() {
         getLogger().info("Preparing to load perks from database");
-        int topSlot = 0;
         try {
             ResultSet perks = Perks.db.createStatement().executeQuery("SELECT * FROM perks;");
             ResultSet perms = Perks.db.createStatement().executeQuery("SELECT * FROM perk_permissions;");
             while (perks.next()) {
                 Perk perk = loadPerk(perks);
                 if (perk == null) continue;
-                if (perk.getMenuSlot() > topSlot) topSlot = perk.getMenuSlot();
                 while (perms.next()) {
                     if (!perms.getString("perkName").equals(perk.getName())) continue;
                     perk.addPermission(perms.getString("permissionNode"));
@@ -188,8 +206,9 @@ public class Main extends JavaPlugin implements Listener {
         if (Perks.perks.isEmpty())
             getLogger().info("No perks loaded from database");
         else {
-            int rows = ((9 - (topSlot % 9)) + topSlot) / 9;
-            Perks.getPerksMenu().setNumRows(rows + 1);
+            for (Realm realm : Perks.getRealms()) {
+                realm.configurePerksMenu();
+            }
         }
         return true;
     }
@@ -218,9 +237,19 @@ public class Main extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onMenuPopulate(MenuPopulateEvent event) {
+    public void onPerksMenuPopulate(MenuPopulateEvent event) {
+        Realm realm = null;
+        for (Realm r : Perks.getRealms()) {
+            if (r.getPerksMenu().equals(event.getMenuInstance().getMenu()))
+                realm = r;
+        }
+        if (realm == null) return;
         MenuInstance instance = event.getMenuInstance();
+
         for (Perk perk : Perks.getPerks()) {
+            if (!perk.getMemberRealms().contains(realm))
+                continue;
+
             InventorySlot slot = instance.getSlot(perk.getMenuSlot());
             slot
                     .setMaterial(perk.getMenuMaterial())
@@ -240,19 +269,22 @@ public class Main extends JavaPlugin implements Listener {
             else {
                 String realms = "Can be used in ";
                 int i = 0;
-                for (Realm realm : perk.getMemberRealms()) {
-                    realms += realm.getDisplayName();
-                    if (Perks.getCurrentRealm().equals(realm)) realms += " (this realm)";
+                for (Realm r : perk.getMemberRealms()) {
+                    realms += r.getDisplayName();
+                    if (realm.equals(Perks.getCurrentRealm())) realms += " (this realm)";
                     if (perk.getMemberRealms().size() - 1 != i) realms += ", ";
                     i++;
                 }
                 slot.addHoverText("&lRealms:&f " + realms);
             }
 
+            if (!perk.getMemberRealms().contains(Perks.getCurrentRealm())) {
+                slot.addHoverText("&eWarning: this perk cannot be used in '" + Perks.getCurrentRealm().getDisplayName() + "' which is the realm you are currently in");
+            }
+
             String statusMessage = "";
             Perk.PurchaseStatus ps = perk.purchaseStatus(event.getOpener());
             switch (ps) {
-                case NOT_AVAILABLE_IN_REALM: statusMessage = "&eThis perk is not available in this realm, you need to be in an available realm to purchase and use it"; break;
                 case OWNS_PERK: statusMessage = "&7You already own this perk"; break;
                 case HAS_ALL_PERMISSIONS: statusMessage = "&7You automatically have this perk based on your current permissions"; break;
                 case INSUFFICIENT_FUNDS: statusMessage = "&cYou do not have enough credit to buy this perk"; break;

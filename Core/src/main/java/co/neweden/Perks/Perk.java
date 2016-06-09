@@ -69,16 +69,13 @@ public class Perk {
     public Perk addPermissions(Collection<String> permissionNodes) { permissions.addAll(permissionNodes); return this; }
     public Collection<String> getPermissions() { return new ArrayList<>(permissions); }
 
-    public enum PurchaseStatus { NOT_AVAILABLE_IN_REALM, OWNS_PERK, HAS_ALL_PERMISSIONS, INSUFFICIENT_FUNDS, CAN_PURCHASE }
+    public enum PurchaseStatus { OWNS_PERK, HAS_ALL_PERMISSIONS, INSUFFICIENT_FUNDS, CAN_PURCHASE }
 
     public PurchaseStatus purchaseStatus(Player player) {
         Validate.notNull(player, "Player to check for cannot be null");
 
-        if (!getMemberRealms().contains(Perks.getCurrentRealm()))
-            return PurchaseStatus.NOT_AVAILABLE_IN_REALM;
-
         try {
-            ResultSet rs = Perks.db.createStatement().executeQuery("SELECT purchaseID FROM active_perks WHERE uuid='" + player.getUniqueId() + "';");
+            ResultSet rs = Perks.db.createStatement().executeQuery("SELECT purchaseID FROM active_perks WHERE perkName='" + getName() + "' AND uuid='" + player.getUniqueId() + "';");
             if (rs.next())
                 return PurchaseStatus.OWNS_PERK;
         } catch (SQLException e) {

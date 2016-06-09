@@ -20,7 +20,7 @@ public class Perks {
     protected static Main plugin;
     protected static Realm realm;
     protected static Collection<Realm> realms = new ArrayList<>();
-    protected static Menu perksMenu;
+    protected static Menu realmsMenu;
     protected static Set<Perk> perks = new HashSet<>();
 
     public static Main getPlugion() { return plugin; }
@@ -35,18 +35,14 @@ public class Perks {
         return realm;
     }
 
+    public static Menu getRealmsMenu() { return realmsMenu; }
+
     public static Set<Perk> getPerks() { return new HashSet<>(perks); }
 
     public static Perk newPerk(String perkName) {
         Perk perk = new Perk(perkName);
         perks.add(perk);
         return perk;
-    }
-
-    public static Menu getPerksMenu() { return perksMenu; }
-
-    public static void openPerksMenu(Player player) {
-        perksMenu.openMenu(player);
     }
 
     public static Double getBalance(OfflinePlayer player) {

@@ -1,13 +1,10 @@
 package co.neweden.Perks;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.UUID;
 
 public class Commands implements CommandExecutor {
 
@@ -17,14 +14,15 @@ public class Commands implements CommandExecutor {
                 case "help": helpCommand(sender); break;
                 case "reload": reloadCommand(sender); break;
                 case "balance": balanceCommand(sender, args); break;
+                case "realms": realmsCommand(sender); break;
                 case "buy": buyCommand(sender, args); break;
-                default: sender.sendMessage(Util.formatString("&cThe sub-command you ran is not valid, for a list of valied sub-commands run: help."));
+                default: defaultCommand(sender, args);
             }
             return true;
         }
 
         if (sender instanceof Player) {
-            Perks.openPerksMenu((Player) sender);
+            Perks.getCurrentRealm().getPerksMenu().openMenu((Player) sender);
             return true;
         }
 
@@ -42,7 +40,9 @@ public class Commands implements CommandExecutor {
                 "&f- &ahelp&e: display this help screen\n" +
                 "&f- &areload&e: reload the plugin\n" +
                 "&f- &abalance&e: commands to manage player balances\n" +
-                "&f- &abuy <perk>&e: purchase the specified perk"
+                "&f- &arealms&e: display list of realms\n" +
+                "&f- &abuy <perk>&e: purchase the specified perk\n" +
+                "&f- &a<realm-name>&e: to see perks for a specific realm just enter the name of the realm as the sub-command"
         ));
     }
 
@@ -122,7 +122,19 @@ public class Commands implements CommandExecutor {
 
     }
 
-    public void buyCommand(CommandSender sender, String[] args) {
+    private void realmsCommand(CommandSender sender) {
+        if (sender instanceof Player) {
+            Perks.getRealmsMenu().openMenu((Player) sender);
+            return;
+        }
+
+        sender.sendMessage(Util.formatString("&bList of realms"));
+        for (Realm realm : Perks.getRealms()) {
+            sender.sendMessage(Util.formatString("&f- &a" + realm.getName() + "&e: " + realm.getDisplayName()));
+        }
+    }
+
+    private void buyCommand(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(Util.formatString("&cOnly players can run this command."));
             return;
@@ -152,14 +164,37 @@ public class Commands implements CommandExecutor {
             player.sendMessage(Util.formatString("&cYou do not have enough credit to buy this perk"));
             return;
         }
-        if (ps.equals(Perk.PurchaseStatus.NOT_AVAILABLE_IN_REALM)) {
-            player.sendMessage(Util.formatString("&eWarning you won't be able to use this perk in the realm you are in currently"));
+        if (!perk.getMemberRealms().contains(Perks.getCurrentRealm())) {
+            player.sendMessage(Util.formatString("&eWarning you won't be able to use the perk '" + perk.getDisplayName() + "' in '" + Perks.getCurrentRealm().getDisplayName() + "' which is the realm you are in currently"));
         }
 
         if (perk.purchasePerk(player))
             player.sendMessage(Util.formatString("&aYou have just purchased " + perk.getDisplayName()));
         else
             player.sendMessage(Util.formatString("&cAn unknown error occurred while trying to purchase this perk, please contact a member of staff."));
+    }
+
+    private void defaultCommand(CommandSender sender, String[] args) {
+        if (args.length < 1) helpCommand(sender);
+        Realm realm = null;
+        for (Realm r : Perks.getRealms()) {
+            if (r.getName().equalsIgnoreCase(args[0])) realm = r;
+        }
+        if (realm == null) {
+            sender.sendMessage(Util.formatString("&cThe sub-command or realm name you entered is not valid, for a list of valied sub-commands run: help."));
+            return;
+        }
+
+        if (sender instanceof Player) {
+            realm.getPerksMenu().openMenu((Player) sender);
+            return;
+        }
+
+        sender.sendMessage(Util.formatString("&b" + realm.getDisplayName() + " Perks"));
+        for (Perk perk : Perks.getPerks()) {
+            if (!perk.getMemberRealms().contains(realm)) continue;
+            sender.sendMessage(Util.formatString("&f- &a" + perk.getName() + "&e: " + perk.getDisplayName()));
+        }
     }
 
 }
