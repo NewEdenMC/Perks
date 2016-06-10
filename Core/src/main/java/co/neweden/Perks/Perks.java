@@ -3,15 +3,12 @@ package co.neweden.Perks;
 import co.neweden.menugui.menu.Menu;
 import org.apache.commons.lang.Validate;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Level;
 
 public class Perks {
@@ -21,7 +18,7 @@ public class Perks {
     protected static Realm realm;
     protected static Collection<Realm> realms = new ArrayList<>();
     protected static Menu realmsMenu;
-    protected static Set<Perk> perks = new HashSet<>();
+    protected static Collection<Perk> perks = new ArrayList<>();
 
     public static Main getPlugion() { return plugin; }
 
@@ -37,7 +34,7 @@ public class Perks {
 
     public static Menu getRealmsMenu() { return realmsMenu; }
 
-    public static Set<Perk> getPerks() { return new HashSet<>(perks); }
+    public static Collection<Perk> getPerks() { return new ArrayList<>(perks); }
 
     public static Perk newPerk(String perkName) {
         Perk perk = new Perk(perkName);
