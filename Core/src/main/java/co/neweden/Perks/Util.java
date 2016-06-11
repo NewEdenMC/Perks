@@ -55,15 +55,21 @@ public final class Util {
 		return prefix + df.format(value) + suffix;
 	}
 
-	public static OfflinePlayer getOfflinePlayer(String name) {
+	public static Player getPlayer(String name) {
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			if (player.getName().equals(name))
 				return player;
 		}
+		return null;
+	}
 
-		for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-			if (player.getName().equals(name))
-				return player;
+	public static OfflinePlayer getOfflinePlayer(String name) {
+		Player player = getPlayer(name);
+		if (player != null) return player;
+
+		for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
+			if (offlinePlayer.getName().equals(name))
+				return offlinePlayer;
 		}
 
 		return null;

@@ -1,10 +1,13 @@
 package co.neweden.Perks;
 
+import co.neweden.Perks.permissions.Permissions;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.*;
 
 public class Commands implements CommandExecutor {
 
@@ -14,6 +17,7 @@ public class Commands implements CommandExecutor {
                 case "help": helpCommand(sender); break;
                 case "reload": reloadCommand(sender); break;
                 case "balance": balanceCommand(sender, args); break;
+                case "permissions": permissionsCommand(sender, args); break;
                 case "realms": realmsCommand(sender); break;
                 case "buy": buyCommand(sender, args); break;
                 default: defaultCommand(sender, args);
@@ -40,6 +44,7 @@ public class Commands implements CommandExecutor {
                 "&f- &ahelp&e: display this help screen\n" +
                 "&f- &areload&e: reload the plugin\n" +
                 "&f- &abalance&e: commands to manage player balances\n" +
+                "&f- &apermissions&e: commands to manage permissions\n" +
                 "&f- &arealms&e: display list of realms\n" +
                 "&f- &abuy <perk>&e: purchase the specified perk\n" +
                 "&f- &a<realm-name>&e: to see perks for a specific realm just enter the name of the realm as the sub-command"
@@ -122,6 +127,86 @@ public class Commands implements CommandExecutor {
             sender.sendMessage(Util.formatString("&a" + Util.formatCurrency(updateBal) + " removed from the balance for '" + args[2] + "', balance is now " + Util.formatCurrency(bal - updateBal)));
         }
 
+    }
+
+    private void permissionsCommand(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("perks.admin")) {
+            sender.sendMessage("You do not have permission to perform this command");
+            return;
+        }
+
+        if (args.length > 1) {
+            switch (args[1]) {
+                case "perk": permissionsPerkCommand(sender, args); break;
+                case "player": permissionsPlayerCommand(sender, args); break;
+                default: sender.sendMessage(Util.formatString("&cThe sub-command you ran is not valid, for a list of valied sub-commands run: help."));
+            }
+            return;
+        }
+
+        sender.sendMessage(Util.formatString(
+                "&bPerks Balance Sub-commands\n" +
+                "&f -&apermissions perk <perk-name>&e: get permissions for the specified perk\n" +
+                "&f- &apermissions player <player-name>&e: get permissions for the specified player"
+        ));
+    }
+
+    private void permissionsPerkCommand(CommandSender sender, String[] args) {
+        if (args.length < 3) {
+            sender.sendMessage(Util.formatString("&cYou did not specify a perk."));
+            return;
+        }
+        Perk perk = null;
+        for (Perk p : Perks.getPerks()) {
+            if (p.getName().equals(args[2]))
+                perk = p;
+        }
+        if (perk == null) {
+            sender.sendMessage(Util.formatString("&cThe perk name you provided is not valid."));
+            return;
+        }
+
+        sender.sendMessage(Util.formatString("&aPermissions for '" + perk.getName() + "'"));
+        for (String perm : perk.getPermissions()) {
+            sender.sendMessage(Util.formatString("&f- " + perm));
+        }
+    }
+
+    private void permissionsPlayerCommand(CommandSender sender, String[] args) {
+        if (args.length < 3) {
+            sender.sendMessage(Util.formatString("&cYou did not specify a player."));
+            return;
+        }
+
+        Map<String, Collection<Perk>> permsMap;
+        Player player = Util.getPlayer(args[2]);
+        if (player == null) {
+            OfflinePlayer offlinePlayer = Util.getOfflinePlayer(args[2]);
+            if (offlinePlayer == null) {
+                sender.sendMessage(Util.formatString("&cThe player '" + args[2] + "' has either never played before or has changed their name since last login."));
+                return;
+            }
+            sender.sendMessage(Util.formatString("&e'" + args[2] + "' is not offline, therefor active permissions are not available, here are the expected permissions"));
+            permsMap = Permissions.getPermsMap(offlinePlayer);
+        } else {
+            sender.sendMessage(Util.formatString("&aActive permissions for '" + args[2] + "'"));
+            permsMap = Permissions.getPermsMap(player);
+        }
+        if (permsMap.isEmpty()) {
+            sender.sendMessage(Util.formatString("&eNo permissions found"));
+            return;
+        }
+        for (Map.Entry<String, Collection<Perk>> perm : permsMap.entrySet()) {
+            String p = "&f- " + perm.getKey();
+            if (perm.getValue().isEmpty())
+                sender.sendMessage(Util.formatString(p));
+            p += " (";
+            for (Perk perk : perm.getValue()) {
+                p += perk.getName() + ", ";
+            }
+            p = p.substring(0, p.length() - 2) + ")";
+            sender.sendMessage(Util.formatString(p));
+        }
     }
 
     private void realmsCommand(CommandSender sender) {

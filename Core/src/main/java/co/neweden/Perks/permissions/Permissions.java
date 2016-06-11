@@ -4,6 +4,7 @@ import co.neweden.Perks.Perk;
 import co.neweden.Perks.Perks;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,11 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.PermissionAttachment;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Permissions implements Listener {
 
@@ -47,14 +44,41 @@ public class Permissions implements Listener {
         }
     }
 
-    private static Collection<PermNodeCache> getPerms(Permissible permissible) {
+    public static Map<String, Collection<Perk>> getPermsMap(OfflinePlayer player) {
+        Validate.notNull(player, "Cannot get Permissions Map on a null OfflinePlayer object.");
+        Map<String, Collection<Perk>> permsMap = new HashMap<>();
+        for (Perk perk : Perks.getPerks(player)) {
+            for (String perm : perk.getPermissions()) {
+                if (permsMap.containsKey(perm))
+                    permsMap.get(perm).add(perk);
+                else
+                    permsMap.put(perm, new ArrayList<>(Arrays.asList(perk)));
+            }
+        }
+        return permsMap;
+    }
+
+    public static Map<String, Collection<Perk>> getPermsMap(Player player) {
+        Validate.notNull(player, "Cannot get Permissions Map on a null Player object.");
+        Map<String, Collection<Perk>> permsMap = new HashMap<>();
+        for (Map.Entry<String, Boolean> perm : attachments.get(player).getPermissions().entrySet()) {
+            if (!perm.getValue()) continue;
+            permsMap.put(perm.getKey(), new ArrayList<Perk>());
+        }
+        for (PermNodeCache cache : getCache(player)) {
+            permsMap.get(cache.name).addAll(cache.perks);
+        }
+        return permsMap;
+    }
+
+    private static Collection<PermNodeCache> getCache(Permissible permissible) {
         if (!permissionsCache.containsKey(permissible))
             permissionsCache.put(permissible, new ArrayList<PermNodeCache>());
         return permissionsCache.get(permissible);
     }
 
     private static PermNodeCache getCache(Permissible permissible, String perm) {
-        for (PermNodeCache cache : getPerms(permissible)) {
+        for (PermNodeCache cache : getCache(permissible)) {
             if (cache.name.equals(perm))
                 return cache;
         }
@@ -82,7 +106,7 @@ public class Permissions implements Listener {
 
     public static void detachPermissions(Permissible permissible) {
         Validate.notNull(permissible, "Cannot detach permissions from a null Permissible object");
-        for (PermNodeCache perm : getPerms(permissible)) {
+        for (PermNodeCache perm : getCache(permissible)) {
             attachments.get(permissible).unsetPermission(perm.name);
         }
         permissionsCache.remove(permissible);
@@ -92,7 +116,7 @@ public class Permissions implements Listener {
         Validate.notNull(permissible, "Cannot detach permissions from a null Permissible object");
         Validate.notNull(perk, "Cannot detach permissions using a null Perk object");
 
-        Collection<PermNodeCache> perms = getPerms(permissible);
+        Collection<PermNodeCache> perms = getCache(permissible);
         for (PermNodeCache perm : perms) {
             if (!perm.perks.contains(perk)) continue;
             perm.perks.remove(perk);
