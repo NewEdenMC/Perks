@@ -1,5 +1,6 @@
 package co.neweden.Perks;
 
+import co.neweden.Perks.permissions.Permissions;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -109,6 +110,7 @@ public class Perk {
             } else return false;
 
             Perks.db.createStatement().executeUpdate("INSERT INTO `transaction_history` (`UUID`, `perkName`, `purchaseID`, `action`) VALUES ('" + player.getUniqueId() + "', '" + getName() + "', '" + purchaseID + "', 'PURCHASE');");
+            Permissions.attachPermissions(player, this);
         } catch (SQLException e) {
             Perks.getPlugion().getLogger().log(Level.SEVERE, "An SQLException occurred while purchasing a perk.", e);
             return false;

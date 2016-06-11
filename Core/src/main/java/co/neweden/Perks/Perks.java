@@ -36,6 +36,22 @@ public class Perks {
 
     public static Collection<Perk> getPerks() { return new ArrayList<>(perks); }
 
+    public static Collection<Perk> getPerks(OfflinePlayer player) {
+        Collection<Perk> perks = new ArrayList<>();
+        try {
+            ResultSet rs = Perks.db.createStatement().executeQuery("SELECT perkName FROM active_perks WHERE uuid='" + player.getUniqueId() + "';");
+            while (rs.next()) {
+                for (Perk perk : getPerks()) {
+                    if (rs.getString("perkName").equals(perk.getName()))
+                        perks.add(perk);
+                }
+            }
+        } catch (SQLException e) {
+            getPlugion().getLogger().log(Level.SEVERE, "An SQLException occurred while trying to get active perks for " + player.getName(), e);
+        }
+        return perks;
+    }
+
     public static Perk newPerk(String perkName) {
         Perk perk = new Perk(perkName);
         perks.add(perk);

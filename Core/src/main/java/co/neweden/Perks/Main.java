@@ -1,5 +1,6 @@
 package co.neweden.Perks;
 
+import co.neweden.Perks.permissions.Permissions;
 import co.neweden.menugui.*;
 import co.neweden.menugui.menu.InventorySlot;
 import co.neweden.menugui.menu.MenuInstance;
@@ -26,11 +27,15 @@ public class Main extends JavaPlugin implements Listener {
         startup();
         getCommand("perks").setExecutor(new Commands());
         getServer().getPluginManager().registerEvents(this, this);
+        getServer().getPluginManager().registerEvents(new Permissions(), this);
     }
 
     private boolean startup() {
         saveDefaultConfig();
-        return loadDBConnection() && setupDB() && loadRealms() && loadPerks();
+        if (!loadDBConnection() || !setupDB() || !loadRealms() || !loadPerks())
+            return false;
+        Permissions.attachPermissions();
+        return true;
     }
 
     public boolean reload() {
@@ -38,6 +43,7 @@ public class Main extends JavaPlugin implements Listener {
         for (Realm realm : Perks.getRealms()) {
             if (!MenuGUI.unloadMenu(realm.getPerksMenu())) return false;
         }
+        Permissions.detachPermissions();
         Perks.realms.clear();
         Perks.perks.clear();
         try {
