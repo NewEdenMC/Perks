@@ -47,8 +47,10 @@ public class Commands implements CommandExecutor {
     }
 
     private void reloadCommand(CommandSender sender) {
-        if (!sender.hasPermission("perks.admin"))
+        if (!sender.hasPermission("perks.admin")) {
             sender.sendMessage("You do not have permission to perform this command");
+            return;
+        }
 
         if (Perks.getPlugion().reload())
             sender.sendMessage(Util.formatString("&aReloaded plugin."));
