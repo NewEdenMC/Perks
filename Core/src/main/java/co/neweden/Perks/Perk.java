@@ -103,7 +103,7 @@ public class Perk {
         try {
             int purchaseID;
             Statement st = Perks.db.createStatement();
-            st.executeUpdate("INSERT INTO `active_perks` (`uuid`, `perkName`, `expiresOn`) VALUES ('" + player.getUniqueId() + "', '" + getName() + "', '" + getTimeLength() + "');", Statement.RETURN_GENERATED_KEYS);
+            st.executeUpdate("INSERT INTO `active_perks` (`uuid`, `perkName`, `purchaseTimeStamp`) VALUES ('" + player.getUniqueId() + "', '" + getName() + "', '" + System.currentTimeMillis() / 1000 + "');", Statement.RETURN_GENERATED_KEYS);
             ResultSet rs = st.getGeneratedKeys();
             if (rs.next()) {
                 purchaseID = rs.getInt(1);

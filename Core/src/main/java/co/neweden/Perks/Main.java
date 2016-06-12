@@ -128,7 +128,7 @@ public class Main extends JavaPlugin implements Listener {
                     "  `purchaseID` INT NOT NULL AUTO_INCREMENT,\n" +
                     "  `uuid` VARCHAR(36) NOT NULL,\n" +
                     "  `perkName` VARCHAR(64) NOT NULL,\n" +
-                    "  `expiresOn` INT NULL,\n" +
+                    "  `purchaseTimeStamp` INT NULL,\n" +
                     "  PRIMARY KEY (`purchaseID`)\n" +
                     ");"
             );
@@ -139,6 +139,7 @@ public class Main extends JavaPlugin implements Listener {
                     "  `perkName` VARCHAR(64) NOT NULL,\n" +
                     "  `purchaseID` INT NOT NULL,\n" +
                     "  `action` VARCHAR(16) NOT NULL,\n" +
+                    "  `timeStamp` INT NOT NULL,\n" +
                     "  PRIMARY KEY (`transactionID`)\n" +
                     ");"
             );
