@@ -1,5 +1,9 @@
 package co.neweden.Perks;
 
+import co.neweden.Perks.commands.CommandMain;
+import co.neweden.Perks.commands.HelpPages;
+import co.neweden.Perks.commands.PerkCommands;
+import co.neweden.Perks.commands.PlayerCommands;
 import co.neweden.Perks.permissions.Permissions;
 import co.neweden.menugui.*;
 import co.neweden.menugui.menu.InventorySlot;
@@ -25,7 +29,10 @@ public class Main extends JavaPlugin implements Listener {
     public void onEnable() {
         Perks.plugin = this;
         startup();
-        getCommand("perks").setExecutor(new Commands());
+        HelpPages.registerClass(CommandMain.class);
+        HelpPages.registerClass(PerkCommands.class);
+        HelpPages.registerClass(PlayerCommands.class);
+        getCommand("perks").setExecutor(new CommandMain());
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new Permissions(), this);
     }
