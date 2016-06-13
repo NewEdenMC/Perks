@@ -100,8 +100,7 @@ public class Main extends JavaPlugin implements Listener {
                     "  `description` VARCHAR(256) NULL,\n" +
                     "  `cost` DOUBLE NOT NULL DEFAULT 0,\n" +
                     "  `menuSlot` INT NOT NULL,\n" +
-                    "  `oneTimePurchase` TINYINT(1) NOT NULL DEFAULT 1,\n" +
-                    "  `timeLength` INT(11) NULL,\n" +
+                    "  `timeLength` INT(11) NOT NULL DEFAULT -1,\n" +
                     "  `menuMaterial` VARCHAR(128) NOT NULL,\n" +
                     "  `menuAnimationJSON` BLOB NULL,\n" +
                     "  `availableRealmsJSON` BLOB NULL,\n" +
@@ -233,7 +232,6 @@ public class Main extends JavaPlugin implements Listener {
         if (rs.getString("description") != null) perk.setDescription(rs.getString("description"));
         perk.setCost(rs.getDouble("cost"));
         perk.setMenuSlot(rs.getInt("menuSlot"));
-        perk.setOneTimePurchase(rs.getBoolean("oneTimePurchase"));
         perk.setTimeLength(rs.getInt("timeLength"));
         perk.setMenuMaterial(Material.getMaterial(rs.getString("menuMaterial")));
         if (rs.getBlob("menuAnimationJSON") != null) perk.setMenuAnimationJSON(rs.getBlob("menuAnimationJSON"));
@@ -273,7 +271,7 @@ public class Main extends JavaPlugin implements Listener {
                 slot.addHoverText(perk.getDescription());
             slot.addHoverText("&lCost:&f " + Util.formatCurrency(perk.getCost()));
 
-            if (perk.isOneTimePurchase())
+            if (perk.getTimeLength() == -1)
                 slot.addHoverText("&lDuration:&f Never expires");
             else
                 slot.addHoverText("&lDuration:&f " + perk.getTimeLength());

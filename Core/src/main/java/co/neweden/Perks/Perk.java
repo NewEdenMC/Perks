@@ -22,7 +22,6 @@ public class Perk {
     private Integer menuSlot;
     private Material menuMaterial;
     private String menuAnimationJSON;
-    private Boolean oneTimePurchase;
     private Integer timeLength;
     private Collection<Realm> realms = new ArrayList<>();
     private Collection<String> permissions = new ArrayList<>();
@@ -52,9 +51,6 @@ public class Perk {
         return this;
     }
     public String getMenuAnimationJSON() { return menuAnimationJSON; }
-
-    public Perk setOneTimePurchase(boolean isOneTimePurchase) { oneTimePurchase = isOneTimePurchase; return this; }
-    public Boolean isOneTimePurchase() { return oneTimePurchase; }
 
     public Perk setTimeLength(Integer timeLength) { this.timeLength = timeLength; return this; }
     public Integer getTimeLength() { return timeLength; }
