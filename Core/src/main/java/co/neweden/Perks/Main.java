@@ -21,6 +21,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 public class Main extends JavaPlugin implements Listener {
@@ -274,7 +275,7 @@ public class Main extends JavaPlugin implements Listener {
             if (perk.getTimeLength() == -1)
                 slot.addHoverText("&lDuration:&f Never expires");
             else
-                slot.addHoverText("&lDuration:&f " + perk.getTimeLength());
+                slot.addHoverText("&lDuration:&f " + Util.formatTime(perk.getTimeLength(), TimeUnit.MINUTES));
 
             if (perk.isMemberOfAllRealms())
                 slot.addHoverText("&lRealms:&f Can be used in all realms");
