@@ -5,6 +5,8 @@ import co.neweden.Perks.commands.HelpPages;
 import co.neweden.Perks.commands.PerkCommands;
 import co.neweden.Perks.commands.PlayerCommands;
 import co.neweden.Perks.permissions.Permissions;
+import co.neweden.Perks.timer.TimedPerk;
+import co.neweden.Perks.timer.Timer;
 import co.neweden.menugui.*;
 import co.neweden.menugui.menu.InventorySlot;
 import co.neweden.menugui.menu.MenuInstance;
@@ -36,6 +38,7 @@ public class Main extends JavaPlugin implements Listener {
         getCommand("perks").setExecutor(new CommandMain());
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new Permissions(), this);
+        getServer().getPluginManager().registerEvents(new Timer(), this);
     }
 
     private boolean startup() {
@@ -43,6 +46,7 @@ public class Main extends JavaPlugin implements Listener {
         if (!loadDBConnection() || !setupDB() || !loadRealms() || !loadPerks())
             return false;
         Permissions.attachPermissions();
+        Timer.timer();
         return true;
     }
 
@@ -54,6 +58,7 @@ public class Main extends JavaPlugin implements Listener {
         Permissions.detachPermissions();
         Perks.realms.clear();
         Perks.perks.clear();
+        Timer.reset();
         try {
             Perks.db.close();
         } catch (SQLException e) {
@@ -305,7 +310,7 @@ public class Main extends JavaPlugin implements Listener {
             }
             slot.addHoverText(Util.formatString(statusMessage));
             if (ps.equals(Perk.PurchaseStatus.CAN_PURCHASE))
-                slot.setClickCommand("perks buy " + perk.getName());
+                slot.setClickCommand("perks perk " + perk.getName() + " buy");
 
             if (perk.getMenuAnimationJSON() != null)
                 slot.animationFromJSON(perk.getMenuAnimationJSON());

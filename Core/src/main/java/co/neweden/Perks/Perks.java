@@ -22,6 +22,8 @@ public class Perks {
 
     public static Main getPlugion() { return plugin; }
 
+    public static Connection getDB() { return db; }
+
     public static Realm getCurrentRealm() { return realm; }
 
     public static Collection<Realm> getRealms() { return new ArrayList<>(realms); }

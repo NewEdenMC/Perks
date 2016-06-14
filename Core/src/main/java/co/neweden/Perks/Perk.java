@@ -1,6 +1,7 @@
 package co.neweden.Perks;
 
 import co.neweden.Perks.permissions.Permissions;
+import co.neweden.Perks.timer.Timer;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -105,12 +106,44 @@ public class Perk {
                 purchaseID = rs.getInt(1);
             } else return false;
 
-            Perks.db.createStatement().executeUpdate("INSERT INTO `transaction_history` (`UUID`, `perkName`, `purchaseID`, `action`) VALUES ('" + player.getUniqueId() + "', '" + getName() + "', '" + purchaseID + "', 'PURCHASE');");
+            Perks.db.createStatement().executeUpdate("INSERT INTO `transaction_history` (`UUID`, `perkName`, `purchaseID`, `action`, `timeStamp`) VALUES ('" + player.getUniqueId() + "', '" + getName() + "', '" + purchaseID + "', 'PURCHASE', '" + System.currentTimeMillis() / 1000 + "');");
             Permissions.attachPermissions(player, this);
+            if (getTimeLength() >= 0)
+                Timer.addTimedPerk(this, player);
         } catch (SQLException e) {
             Perks.getPlugion().getLogger().log(Level.SEVERE, "An SQLException occurred while purchasing a perk.", e);
             return false;
         }
+        return true;
+    }
+
+    public enum RemoveStatus { EXPIRE, REFUND, REMOVED }
+
+    public boolean removePerk(Player player, RemoveStatus status) {
+        Validate.notNull(player, "Cannot remove perk from a null Player object");
+        if (status == null) status = RemoveStatus.REMOVED;
+
+        PurchaseStatus ps = purchaseStatus(player);
+        if (ps == PurchaseStatus.HAS_ALL_PERMISSIONS || ps != PurchaseStatus.OWNS_PERK)
+            return false;
+
+        try {
+            int purchaseID;
+            ResultSet rs = Perks.db.createStatement().executeQuery("SELECT purchaseID FROM active_perks WHERE uuid='" + player.getUniqueId() + "' AND perkName='" + getName() + "';");
+            if (!rs.next())
+                return false;
+            purchaseID = rs.getInt("purchaseID");
+
+            Perks.db.createStatement().executeLargeUpdate("DELETE FROM `active_perks` WHERE uuid='" + player.getUniqueId() + "' AND perkName='" + getName() + "';");
+            Perks.db.createStatement().executeUpdate("INSERT INTO `transaction_history` (`UUID`, `perkName`, `purchaseID`, `action`, `timeStamp`) VALUES ('" + player.getUniqueId() + "', '" + getName() + "', '" + purchaseID + "', '" + status + "', '" + System.currentTimeMillis() / 1000 + "');");
+
+            Permissions.detachPermissions(player, this);
+        } catch (SQLException e) {
+            Perks.getPlugion().getLogger().log(Level.SEVERE, "An SQLException occurred while removing a perk.", e);
+            return false;
+        }
+        if (status == RemoveStatus.REFUND)
+            Perks.setBalance(player, Perks.getBalance(player) + getCost());
         return true;
     }
 

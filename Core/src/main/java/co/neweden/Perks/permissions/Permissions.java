@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -20,7 +21,7 @@ public class Permissions implements Listener {
     private static Map<Permissible, PermissionAttachment> attachments = new HashMap<>();
     private static Map<Permissible, Collection<PermNodeCache>> permissionsCache = new HashMap<>();
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event) {
         PermissionAttachment attachment = event.getPlayer().addAttachment(Perks.getPlugion());
         attachments.put(event.getPlayer(), attachment);
