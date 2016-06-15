@@ -60,6 +60,16 @@ public class Perks {
         return perk;
     }
 
+    protected static boolean setValue(String perkName, String key, String value) {
+        try {
+            Perks.getDB().createStatement().executeUpdate("UPDATE `perks` SET `" + key + "`='" + value + "' WHERE `perkName`='" + perkName + "';");
+            return true;
+        } catch (SQLException e) {
+            Perks.getPlugion().getLogger().log(Level.SEVERE, "An SQLException occurred while updating a perk.");
+            return false;
+        }
+    }
+
     public static Double getBalance(OfflinePlayer player) {
         Validate.notNull(player, "Null OfflinePlayer object passed to getBalance method");
         try {

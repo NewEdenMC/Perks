@@ -33,41 +33,72 @@ public class Perk {
 
     public String getName() { return name; }
 
-    public Perk setDisplayName(String displayName) { this.displayName = displayName; return this; }
     public String getDisplayName() { return displayName != null ? displayName : name; }
+    public Perk setDisplayName(String displayName) {
+        Perks.setValue(name, "displayName", displayName);
+        this.displayName = displayName;
+        return this;
+    }
 
-    public Perk setDescription(String description) { this.description = description; return this; }
     public String getDescription() { return description; }
+    public Perk setDescription(String description) {
+        Perks.setValue(name, "description", description);
+        this.description = description;
+        return this;
+    }
 
-    public Perk setCost(Double cost) { this.cost = cost; return this; }
     public Double getCost() { return cost; }
+    public Perk setCost(Double cost) {
+        Perks.setValue(name, "cost", cost.toString());
+        this.cost = cost;
+        return this;
+    }
 
-    public Perk setMenuSlot(Integer slot) { menuSlot = slot; return this; }
+    public Integer getTimeLength() { return timeLength; }
+    public Perk setTimeLength(Integer timeLength) {
+        Perks.setValue(name, "timeLength", timeLength.toString());
+        this.timeLength = timeLength;
+        return this;
+    }
+
     public Integer getMenuSlot() { return menuSlot; }
+    public Perk setMenuSlot(Integer slot) {
+        Perks.setValue(name, "menuSlot", slot.toString());
+        menuSlot = slot;
+        return this;
+    }
 
-    public Perk setMenuMaterial(Material material) { menuMaterial = material; return this; }
     public Material getMenuMaterial() { return menuMaterial; }
+    public Perk setMenuMaterial(Material material) {
+        Perks.setValue(name, "menuMaterial", material.toString());
+        menuMaterial = material;
+        return this;
+    }
 
-    public Perk setMenuAnimationJSON(String json) { menuAnimationJSON = json; return this; }
+    public String getMenuAnimationJSON() { return menuAnimationJSON; }
+    public Perk setMenuAnimationJSON(String json) {
+        menuAnimationJSON = json;
+        return this;
+    }
     public Perk setMenuAnimationJSON(Blob json) throws SQLException {
         menuAnimationJSON = new String(json.getBytes(1, (int) json.length()));
         return this;
     }
-    public String getMenuAnimationJSON() { return menuAnimationJSON; }
 
-    public Perk setTimeLength(Integer timeLength) { this.timeLength = timeLength; return this; }
-    public Integer getTimeLength() { return timeLength; }
-
-    public Perk addToRealm(Realm realm) { realms.add(realm); return this; }
-    public Perk addToRealms(Collection<Realm> realm) { realms.addAll(realm); return this; }
     public Collection<Realm> getMemberRealms() {
         return isMemberOfAllRealms() ? Perks.getRealms() : new ArrayList<>(realms);
     }
+    public Perk addToRealm(Realm realm) { realms.add(realm); return this; }
+    public Perk addToRealms(Collection<Realm> realm) {
+        realms.addAll(realm);
+        return this;
+    }
+
     public boolean isMemberOfAllRealms() { return realms.isEmpty(); }
 
+    public Collection<String> getPermissions() { return new ArrayList<>(permissions); }
     public Perk addPermission(String permissionNode) { permissions.add(permissionNode); return this; }
     public Perk addPermissions(Collection<String> permissionNodes) { permissions.addAll(permissionNodes); return this; }
-    public Collection<String> getPermissions() { return new ArrayList<>(permissions); }
 
     public enum PurchaseStatus { OWNS_PERK, HAS_ALL_PERMISSIONS, INSUFFICIENT_FUNDS, CAN_PURCHASE }
 
