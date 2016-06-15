@@ -5,6 +5,7 @@ import co.neweden.Perks.Perks;
 import org.apache.commons.lang.Validate;
 import org.bukkit.OfflinePlayer;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -31,8 +32,12 @@ public class Transaction {
     protected int createTransaction() throws SQLException {
         timeStamp = System.currentTimeMillis() / 1000;
         status = Transactions.Status.OPEN;
-        Statement st = Perks.getDB().createStatement();
-        st.executeUpdate("INSERT INTO `transaction_history` (`type`, `UUID`, `timeStamp`, `status`) VALUES ('" + type + "', '" + player.getUniqueId() + "', '" + timeStamp + "', '" + status + "');", Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement st = Perks.getDB().prepareStatement("INSERT INTO `transaction_history` (`type`, `UUID`, `timeStamp`, `status`) VALUES (?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
+        st.setString(1, type.toString());
+        st.setString(2, player.getUniqueId().toString());
+        st.setLong(3, timeStamp);
+        st.setString(4, status.toString());
+        st.executeUpdate();
         ResultSet rs = st.getGeneratedKeys();
         rs.next();
         transactionID = rs.getInt(1);

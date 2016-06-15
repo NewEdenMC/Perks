@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -41,9 +42,10 @@ public class Timer implements Listener {
 
     public static boolean addTimedPerk(Perk perk, Player player) {
         try {
-            ResultSet rs = Perks.getDB().createStatement().executeQuery(
-                    "SELECT purchaseTimeStamp FROM active_perks WHERE perkName='" + perk.getName() + "' AND uuid='" + player.getUniqueId() + "';"
-            );
+            PreparedStatement st = Perks.getDB().prepareStatement("SELECT purchaseTimeStamp FROM active_perks WHERE perkName=? AND uuid=?;");
+            st.setString(1, perk.getName());
+            st.setString(2, player.getUniqueId().toString());
+            ResultSet rs = st.executeQuery();
             if (rs.next()) {
                 long currentTime = System.currentTimeMillis() / 1000;
                 long expire = rs.getInt("purchaseTimeStamp") + perk.getTimeLength();

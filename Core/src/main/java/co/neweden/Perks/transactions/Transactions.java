@@ -5,6 +5,7 @@ import co.neweden.Perks.Perks;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -36,7 +37,9 @@ public class Transactions {
                 return t;
         }
         try {
-            ResultSet rs = Perks.getDB().createStatement().executeQuery("SELECT * FROM transaction_history WHERE transactionID='" + transactionID + "';");
+            PreparedStatement st = Perks.getDB().prepareStatement("SELECT * FROM transaction_history WHERE transactionID=?;");
+            st.setInt(1, transactionID);
+            ResultSet rs = st.executeQuery();
             if (!rs.next())
                 return null;
             Type type = Type.valueOf(rs.getString("type"));
@@ -60,10 +63,13 @@ public class Transactions {
 
     protected static boolean setValue(int transactionID, String key, String value) {
         try {
-            Perks.getDB().createStatement().executeUpdate("UPDATE `transaction_history` SET `" + key + "`='" + value + "' WHERE `transactionID`='" + transactionID + "';");
+            PreparedStatement st = Perks.getDB().prepareStatement("UPDATE transaction_history SET " + key + "=? WHERE transactionID=?"); // key not sanitized but should never be user generated
+            st.setObject(1, value);
+            st.setInt(2, transactionID);
+            st.executeUpdate();
             return true;
         } catch (SQLException e) {
-            Perks.getPlugion().getLogger().log(Level.SEVERE, "An SQLException occurred while updating a transaction.");
+            Perks.getPlugion().getLogger().log(Level.SEVERE, "An SQLException occurred while updating transaction " + transactionID, e);
             return false;
         }
     }

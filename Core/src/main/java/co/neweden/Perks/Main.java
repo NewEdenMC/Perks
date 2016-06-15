@@ -21,6 +21,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Type;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -133,7 +134,7 @@ public class Main extends JavaPlugin implements Listener {
             Perks.db.createStatement().execute(
                     "CREATE TABLE IF NOT EXISTS `config` (\n" +
                     "  `setting` VARCHAR(128) NOT NULL,\n" +
-                    "  `value` VARCHAR(256) NOT NULL,\n" +
+                    "  `value` VARCHAR(256) NULL,\n" +
                     "  PRIMARY KEY (`setting`)\n" +
                     ");"
             );
@@ -158,9 +159,19 @@ public class Main extends JavaPlugin implements Listener {
                     "  PRIMARY KEY (`transactionID`)\n" +
                     ");"
             );
-            Perks.db.createStatement().executeUpdate("INSERT INTO config (`setting`) VALUES ('currency_prefix') ON DUPLICATE KEY UPDATE setting=setting;");
-            Perks.db.createStatement().executeUpdate("INSERT INTO config (`setting`,`value`) VALUES ('currency_formatting','#,##0.00') ON DUPLICATE KEY UPDATE setting=setting;");
-            Perks.db.createStatement().executeUpdate("INSERT INTO config (`setting`,`value`) VALUES ('currency_suffix',' credit(s)') ON DUPLICATE KEY UPDATE setting=setting;");
+            PreparedStatement stS = Perks.getDB().prepareStatement("INSERT INTO config (`setting`) VALUES (?) ON DUPLICATE KEY UPDATE setting=setting;");
+            PreparedStatement stSV = Perks.getDB().prepareStatement("INSERT INTO config (`setting`,`value`) VALUES (?,?) ON DUPLICATE KEY UPDATE setting=setting;");
+
+            stS.setString(1, "currency_prefix");
+            stS.executeUpdate();
+
+            stSV.setString(1, "currency_formatting");
+            stSV.setString(2, "#,##0.00");
+            stSV.executeUpdate();
+
+            stSV.setString(1, "currency_suffix");
+            stSV.setString(2, "credit(s)");
+            stSV.executeUpdate();
         } catch (SQLException e) {
             getLogger().log(Level.SEVERE, "Unable to setup setup database", e);
             return false;
@@ -172,7 +183,7 @@ public class Main extends JavaPlugin implements Listener {
         getLogger().info("Preparing to load realms from database");
         String configRealm = getConfig().getString("realmName", "");
         try {
-            ResultSet rs = Perks.db.createStatement().executeQuery("SELECT * FROM realms;");
+            ResultSet rs = Perks.getDB().prepareStatement("SELECT * FROM realms;").executeQuery();
             while (rs.next()) {
                 Realm realm = Perks.newRealm(rs.getString("name"));
                 realm.setDisplayName(rs.getString("displayName"));
@@ -209,8 +220,8 @@ public class Main extends JavaPlugin implements Listener {
     private boolean loadPerks() {
         getLogger().info("Preparing to load perks from database");
         try {
-            ResultSet perks = Perks.db.createStatement().executeQuery("SELECT * FROM perks;");
-            ResultSet perms = Perks.db.createStatement().executeQuery("SELECT * FROM perk_permissions;");
+            ResultSet perks = Perks.getDB().prepareStatement("SELECT * FROM perks;").executeQuery();
+            ResultSet perms = Perks.getDB().prepareStatement("SELECT * FROM perk_permissions;").executeQuery();
             while (perks.next()) {
                 Perk perk = loadPerk(perks);
                 if (perk == null) continue;
@@ -237,13 +248,14 @@ public class Main extends JavaPlugin implements Listener {
 
     private Perk loadPerk(ResultSet rs) throws SQLException {
         Perk perk = Perks.newPerk(rs.getString("name"));
-        if (rs.getString("displayName") != null) perk.setDisplayName(rs.getString("displayName"));
-        if (rs.getString("description") != null) perk.setDescription(rs.getString("description"));
-        perk.setCost(rs.getDouble("cost"));
-        perk.setMenuSlot(rs.getInt("menuSlot"));
-        perk.setTimeLength(rs.getInt("timeLength"));
-        perk.setMenuMaterial(Material.getMaterial(rs.getString("menuMaterial")));
-        if (rs.getBlob("menuAnimationJSON") != null) perk.setMenuAnimationJSON(rs.getBlob("menuAnimationJSON"));
+        if (rs.getString("displayName") != null) perk.displayName = rs.getString("displayName");
+        if (rs.getString("description") != null) perk.description = rs.getString("description");
+        perk.cost = rs.getDouble("cost");
+        perk.menuSlot = rs.getInt("menuSlot");
+        perk.timeLength = rs.getInt("timeLength");
+        perk.menuMaterial = Material.getMaterial(rs.getString("menuMaterial"));
+        if (rs.getBlob("menuAnimationJSON") != null)
+            perk.menuAnimationJSON = new String(rs.getBlob("menuAnimationJSON").getBytes(1, (int) rs.getBlob("menuAnimationJSON").length()));
         if (rs.getBlob("availableRealmsJSON") != null) {
             Gson gson = new Gson();
             Type listType = new TypeToken<Collection<String>>(){}.getType();

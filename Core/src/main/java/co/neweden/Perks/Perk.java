@@ -8,10 +8,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import java.sql.Blob;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -19,17 +16,19 @@ import java.util.logging.Level;
 public class Perk {
 
     private String name;
-    private String displayName;
-    private String description = "";
-    private Double cost;
-    private Integer menuSlot;
-    private Material menuMaterial;
-    private String menuAnimationJSON;
-    private Integer timeLength;
-    private Collection<Realm> realms = new ArrayList<>();
-    private Collection<String> permissions = new ArrayList<>();
+    protected String displayName;
+    protected String description = "";
+    protected Double cost;
+    protected Integer menuSlot;
+    protected Material menuMaterial;
+    protected String menuAnimationJSON;
+    protected Integer timeLength;
+    protected Collection<Realm> realms = new ArrayList<>();
+    protected Collection<String> permissions = new ArrayList<>();
 
-    public Perk(String perkName) { name = perkName; }
+    private Perk() { }
+
+    protected Perk(String perkName) { name = perkName; }
 
     public String getName() { return name; }
 
@@ -106,11 +105,14 @@ public class Perk {
         Validate.notNull(player, "Player to check for cannot be null");
 
         try {
-            ResultSet rs = Perks.db.createStatement().executeQuery("SELECT purchaseID FROM active_perks WHERE perkName='" + getName() + "' AND uuid='" + player.getUniqueId() + "';");
+            PreparedStatement st = Perks.getDB().prepareStatement("SELECT purchaseID FROM active_perks WHERE perkName=? AND uuid=?;");
+            st.setString(1, getName());
+            st.setString(2, player.getUniqueId().toString());
+            ResultSet rs = st.executeQuery();
             if (rs.next())
                 return PurchaseStatus.OWNS_PERK;
         } catch (SQLException e) {
-            Perks.getPlugion().getLogger().log(Level.SEVERE, "An SQLException occurred while trying to get purcahse information.", e);
+            Perks.getPlugion().getLogger().log(Level.SEVERE, "An SQLException occurred while trying to get purchase information.", e);
         }
         boolean hasAll = true;
         for (String perm : getPermissions()) {
@@ -133,8 +135,11 @@ public class Perk {
         Transaction transaction = Transactions.newTransaction(Transactions.Type.PURCHASE, player);
         transaction.setPerk(this);
         try {
-            Statement st = Perks.db.createStatement();
-            st.executeUpdate("INSERT INTO `active_perks` (`uuid`, `perkName`, `purchaseTimeStamp`) VALUES ('" + player.getUniqueId() + "', '" + getName() + "', '" + System.currentTimeMillis() / 1000 + "');", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement st = Perks.db.prepareStatement("INSERT INTO `active_perks` (`uuid`, `perkName`, `purchaseTimeStamp`) VALUES (?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
+            st.setString(1, player.getUniqueId().toString());
+            st.setString(2, getName());
+            st.setLong(3, System.currentTimeMillis() / 1000);
+            st.executeUpdate();
             ResultSet rs = st.getGeneratedKeys();
             if (!rs.next())
                 return false;
@@ -163,13 +168,17 @@ public class Perk {
         Transaction transaction = Transactions.newTransaction(Transactions.Type.valueOf(status.toString()), player);
         transaction.setPerk(this);
         try {
-            int purchaseID;
-            ResultSet rs = Perks.db.createStatement().executeQuery("SELECT purchaseID FROM active_perks WHERE uuid='" + player.getUniqueId() + "' AND perkName='" + getName() + "';");
+            PreparedStatement stSel = Perks.getDB().prepareStatement("SELECT purchaseID FROM active_perks WHERE uuid=? AND perkName=?;");
+            stSel.setString(1, player.getUniqueId().toString());
+            stSel.setString(2, getName());
+            ResultSet rs = stSel.executeQuery();
             if (!rs.next())
                 return false;
-            purchaseID = rs.getInt("purchaseID");
+            int purchaseID = rs.getInt("purchaseID");
 
-            Perks.db.createStatement().executeUpdate("DELETE FROM `active_perks` WHERE purchaseID='" + purchaseID + "';");
+            PreparedStatement stDel = Perks.getDB().prepareStatement("DELETE FROM `active_perks` WHERE purchaseID=?;");
+            stDel.setInt(1, purchaseID);
+            stDel.executeUpdate();
             transaction.setPurchaseID(purchaseID);
         } catch (SQLException e) {
             Perks.getPlugion().getLogger().log(Level.SEVERE, "An SQLException occurred while removing a perk.", e);
