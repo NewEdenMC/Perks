@@ -86,6 +86,11 @@ public class CommandMain implements CommandExecutor {
     public static void realmsCommand(CommandSender sender) throws CommandException {
         validatePermission(sender, "perks.perks");
 
+        if (sender instanceof Player) {
+            Perks.getRealmsMenu().openMenu((Player) sender);
+            return;
+        }
+
         sender.sendMessage(Util.formatString("&bList of realms"));
         for (Realm realm : Perks.getRealms()) {
             sender.sendMessage(Util.formatString("&f- " + realm.getName() + ": &b" + realm.getDisplayName()));
