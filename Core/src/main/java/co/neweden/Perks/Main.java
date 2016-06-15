@@ -7,6 +7,7 @@ import co.neweden.Perks.commands.PlayerCommands;
 import co.neweden.Perks.permissions.Permissions;
 import co.neweden.Perks.timer.TimedPerk;
 import co.neweden.Perks.timer.Timer;
+import co.neweden.Perks.transactions.Transactions;
 import co.neweden.menugui.*;
 import co.neweden.menugui.menu.InventorySlot;
 import co.neweden.menugui.menu.MenuInstance;
@@ -59,6 +60,7 @@ public class Main extends JavaPlugin implements Listener {
         Perks.realms.clear();
         Perks.perks.clear();
         Timer.reset();
+        Transactions.clearLocalCache();
         try {
             Perks.db.close();
         } catch (SQLException e) {
@@ -147,11 +149,12 @@ public class Main extends JavaPlugin implements Listener {
             Perks.db.createStatement().execute(
                     "CREATE TABLE IF NOT EXISTS `transaction_history` (\n" +
                     "  `transactionID` INT NOT NULL AUTO_INCREMENT,\n" +
+                    "  `type` VARCHAR(16) NOT NULL,\n" +
                     "  `UUID` VARCHAR(36) NOT NULL,\n" +
-                    "  `perkName` VARCHAR(64) NOT NULL,\n" +
-                    "  `purchaseID` INT NOT NULL,\n" +
-                    "  `action` VARCHAR(16) NOT NULL,\n" +
+                    "  `perkName` VARCHAR(64) NULL,\n" +
+                    "  `purchaseID` INT NULL,\n" +
                     "  `timeStamp` INT NOT NULL,\n" +
+                    "  `status` VARCHAR(16) NOT NULL,\n" +
                     "  PRIMARY KEY (`transactionID`)\n" +
                     ");"
             );
