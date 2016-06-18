@@ -5,7 +5,6 @@ description: Perks plugin for New Eden
 website: https://neweden.co/
 version: 0.1
 depend: [MenuGUI]
-softdepend: [Votifier]
 commands:
    perks:
       description: Commands to display perks
