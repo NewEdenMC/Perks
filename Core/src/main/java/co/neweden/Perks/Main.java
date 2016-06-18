@@ -5,7 +5,6 @@ import co.neweden.Perks.commands.HelpPages;
 import co.neweden.Perks.commands.PerkCommands;
 import co.neweden.Perks.commands.PlayerCommands;
 import co.neweden.Perks.permissions.Permissions;
-import co.neweden.Perks.timer.TimedPerk;
 import co.neweden.Perks.timer.Timer;
 import co.neweden.Perks.transactions.Transactions;
 import co.neweden.menugui.*;

@@ -17,6 +17,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>co.neweden</groupId>
+            <artifactId>Perks-Utils</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.10-R0.1-SNAPSHOT</version>
@@ -32,6 +37,12 @@
             <groupId>co.neweden</groupId>
             <artifactId>MenuGUI</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.vexsoftware</groupId>
+            <artifactId>nuvotifier-bukkit</artifactId>
+            <version>2.3.2.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
