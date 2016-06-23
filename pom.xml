@@ -24,6 +24,7 @@
 
     <modules>
         <module>Core</module>
+        <module>Vote</module>
     </modules>
 
     <repositories>

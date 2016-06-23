@@ -153,6 +153,7 @@ public class Main extends JavaPlugin implements Listener {
                     "  `UUID` VARCHAR(36) NOT NULL,\n" +
                     "  `perkName` VARCHAR(64) NULL,\n" +
                     "  `purchaseID` INT NULL,\n" +
+                    "  `voteService` INT NULL,\n" +
                     "  `timeStamp` INT NOT NULL,\n" +
                     "  `status` VARCHAR(16) NOT NULL,\n" +
                     "  PRIMARY KEY (`transactionID`)\n" +
