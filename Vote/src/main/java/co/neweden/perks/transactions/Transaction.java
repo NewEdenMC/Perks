@@ -52,6 +52,8 @@ public class Transaction {
         return true;
     }
 
+    public UUID getUUID() { return uuid; }
+
     public VoteService getVoteService() { return voteService; }
     public boolean setVoteService(VoteService voteService) {
         if (!Transactions.setValue(transactionID, "voteService", String.valueOf(voteService.getID()))) return false;

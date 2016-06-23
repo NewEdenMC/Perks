@@ -132,7 +132,7 @@ public class Perk {
         if (purchaseStatus(player) != PurchaseStatus.CAN_PURCHASE) return false;
         Perks.setBalance(player, Perks.getBalance(player) - getCost());
 
-        Transaction transaction = Transactions.newTransaction(Transactions.Type.PURCHASE, player);
+        Transaction transaction = Transactions.newTransaction(Transactions.Type.PURCHASE, player.getUniqueId());
         transaction.setPerk(this);
         try {
             PreparedStatement st = Perks.db.prepareStatement("INSERT INTO `active_perks` (`uuid`, `perkName`, `purchaseTimeStamp`) VALUES (?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
@@ -165,7 +165,7 @@ public class Perk {
         if (ps == PurchaseStatus.HAS_ALL_PERMISSIONS || ps != PurchaseStatus.OWNS_PERK)
             return false;
 
-        Transaction transaction = Transactions.newTransaction(Transactions.Type.valueOf(status.toString()), player);
+        Transaction transaction = Transactions.newTransaction(Transactions.Type.valueOf(status.toString()), player.getUniqueId());
         transaction.setPerk(this);
         try {
             PreparedStatement stSel = Perks.getDB().prepareStatement("SELECT purchaseID FROM active_perks WHERE uuid=? AND perkName=?;");

@@ -3,18 +3,18 @@ package co.neweden.Perks.transactions;
 import co.neweden.Perks.Perk;
 import co.neweden.Perks.Perks;
 import org.apache.commons.lang.Validate;
-import org.bukkit.OfflinePlayer;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.UUID;
 
 public class Transaction {
 
     protected int transactionID;
     private Transactions.Type type;
-    private OfflinePlayer player;
+    private UUID uuid;
     protected Perk perk;
     protected int purchaseID;
     protected long timeStamp;
@@ -22,11 +22,11 @@ public class Transaction {
 
     private Transaction() { }
 
-    protected Transaction(Transactions.Type type, OfflinePlayer player) {
+    protected Transaction(Transactions.Type type, UUID uuid) {
         Validate.notNull(type, "Cannot create a new Transaction with a null Transaction.Type");
         this.type = type;
-        Validate.notNull(player, "Cannot create a new Transaction with a null OfflinePlayer");
-        this.player = player;
+        Validate.notNull(uuid, "Cannot create a new Transaction with a null UUID");
+        this.uuid = uuid;
     }
 
     protected int createTransaction() throws SQLException {
@@ -34,7 +34,7 @@ public class Transaction {
         status = Transactions.Status.OPEN;
         PreparedStatement st = Perks.getDB().prepareStatement("INSERT INTO `transaction_history` (`type`, `UUID`, `timeStamp`, `status`) VALUES (?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
         st.setString(1, type.toString());
-        st.setString(2, player.getUniqueId().toString());
+        st.setString(2, uuid.toString());
         st.setLong(3, timeStamp);
         st.setString(4, status.toString());
         st.executeUpdate();
@@ -53,7 +53,7 @@ public class Transaction {
         return true;
     }
 
-    public OfflinePlayer getPlayer() { return player; }
+    public UUID getUUID() { return uuid; }
 
     public Perk getPerk() { return perk; }
     public boolean setPerk(Perk perk) {

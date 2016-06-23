@@ -2,8 +2,6 @@ package co.neweden.Perks.transactions;
 
 import co.neweden.Perks.Perk;
 import co.neweden.Perks.Perks;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,8 +17,8 @@ public class Transactions {
     public enum Status { OPEN, COMPLETE }
     private static Collection<Transaction> transactions = new ArrayList<>();
 
-    public static Transaction newTransaction(Type type, OfflinePlayer player) {
-        Transaction t = new Transaction(type, player);
+    public static Transaction newTransaction(Type type, UUID uuid) {
+        Transaction t = new Transaction(type, uuid);
         try {
             t.createTransaction();
         } catch (SQLException e) {
@@ -43,8 +41,7 @@ public class Transactions {
             if (!rs.next())
                 return null;
             Type type = Type.valueOf(rs.getString("type"));
-            OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(rs.getString("UUID")));
-            Transaction t = new Transaction(type, player);
+            Transaction t = new Transaction(type, UUID.fromString(rs.getString("UUID")));
             t.transactionID = rs.getInt("transactionID");
             if (rs.getString("perkName") != null) {
                 for (Perk perk : Perks.getPerks()) {
