@@ -1,10 +1,14 @@
 package co.neweden.Perks;
 
+import com.mojang.api.profiles.HttpProfileRepository;
+import com.mojang.api.profiles.Profile;
+import com.mojang.api.profiles.ProfileRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -96,7 +100,12 @@ public final class Util {
 				return offlinePlayer;
 		}
 
-		return null;
+		HttpProfileRepository hpr = new HttpProfileRepository("minecraft");
+		Profile[] p = hpr.findProfilesByNames(name);
+		if (p.length > 0)
+			return Bukkit.getOfflinePlayer(UUID.fromString(p[0].getId()));
+		else
+			return null;
 	}
 
 }

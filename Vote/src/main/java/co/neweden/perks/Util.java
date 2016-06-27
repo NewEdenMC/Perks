@@ -1,6 +1,12 @@
 package co.neweden.perks;
 
+import com.mojang.api.profiles.HttpProfileRepository;
+import com.mojang.api.profiles.Profile;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+
 import java.text.DecimalFormat;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class Util {
@@ -49,6 +55,21 @@ public class Util {
 
         DecimalFormat df = new DecimalFormat(Perks.getConfigSetting("currency_formatting", "#,##0.00"));
         return prefix + df.format(value) + suffix;
+    }
+
+    public static UUID getUUID(String name) {
+        for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+            if (player.getName().equals(name))
+                return player.getUniqueId();
+        }
+
+        HttpProfileRepository hpr = new HttpProfileRepository("minecraft");
+        Profile[] p = hpr.findProfilesByNames(name);
+        if (p.length > 0) {
+            String uuid = p[0].getId().replaceFirst("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5");
+            return UUID.fromString(uuid);
+        } else
+            return null;
     }
 
 }
