@@ -4,8 +4,10 @@ import co.neweden.perks.Perks;
 import co.neweden.perks.Util;
 import co.neweden.perks.transactions.Transaction;
 import co.neweden.perks.transactions.Transactions;
+import com.mojang.api.profiles.Profile;
 import com.vexsoftware.votifier.bungee.events.VotifierEvent;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -84,13 +86,21 @@ public class VoteManager implements Listener {
         recentTotalVotes++;
 
         ProxiedPlayer player = ProxyServer.getInstance().getPlayer(event.getVote().getUsername());
-        UUID uuid = player.getUniqueId();
+        UUID uuid;
+        if (player != null)
+            uuid = player.getUniqueId();
+        else
+            uuid = Util.getUUID(event.getVote().getUsername());
+
+        if (uuid == null)
+            return;
 
         Transaction t = Transactions.newTransaction(Transactions.Type.VOTE, uuid);
         t.setVoteService(vs);
         Perks.setBalance(uuid, Perks.getBalance(uuid) + vs.getCurrencyPerVote());
         t.setStatus(Transactions.Status.COMPLETE);
-        player.sendMessage(Util.formatString("&aThanks for voting on '" + vs.getDisplayName() + "' you have earned " + Util.formatCurrency(vs.getCurrencyPerVote()) + ", type /vote to see where else you may be able to vote."));
+        if (player != null)
+            player.sendMessage(new TextComponent(Util.formatString("&aThanks for voting on '" + vs.getDisplayName() + "' you have earned " + Util.formatCurrency(vs.getCurrencyPerVote()) + ", type /vote to see where else you may be able to vote.")));
     }
 
     public static void clearLocalCache() { voteServices.clear(); }
