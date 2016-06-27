@@ -104,7 +104,7 @@ public class VoteManager implements Listener {
             t.setStatus(Transactions.Status.COMPLETE);
 
             if (player != null)
-                player.sendMessage(new TextComponent(Util.formatString("&aThanks for voting on '" + vs.getDisplayName() + "' you have earned " + Util.formatCurrency(vs.getCurrencyPerVote()) + ", type /vote to see where else you may be able to vote.")));
+                player.sendMessage(Util.formatStringToBaseComponent("&aThanks for voting on '" + vs.getDisplayName() + "' you have earned " + Util.formatCurrency(vs.getCurrencyPerVote()) + ", type /vote to see where else you may be able to vote."));
 
         }
 
@@ -119,7 +119,7 @@ public class VoteManager implements Listener {
             message = message + name + ", ";
         }
         message = message.substring(0, message.length() - 2);
-        Perks.getPlugion().getProxy().broadcast(new TextComponent(Util.formatString(message)));
+        Perks.getPlugion().getProxy().broadcast(Util.formatStringToBaseComponent(message));
 
         recentVotes.clear();
         recentTotalVotes = 0;

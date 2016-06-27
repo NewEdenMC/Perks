@@ -3,6 +3,8 @@ package co.neweden.perks;
 import com.mojang.api.profiles.HttpProfileRepository;
 import com.mojang.api.profiles.Profile;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.text.DecimalFormat;
@@ -38,6 +40,11 @@ public class Util {
         text = text.replaceAll("&r", "\u00A7r"); // Reset
 
         return text;
+    }
+
+    public static BaseComponent[] formatStringToBaseComponent(String text) {
+        text = formatString(text);
+        return TextComponent.fromLegacyText(text);
     }
 
     public static String formatCurrency(Double value) {
