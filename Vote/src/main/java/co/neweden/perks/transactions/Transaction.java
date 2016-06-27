@@ -2,6 +2,7 @@ package co.neweden.perks.transactions;
 
 import co.neweden.perks.Perks;
 import co.neweden.perks.vote.VoteService;
+import org.apache.commons.lang.Validate;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,10 +22,9 @@ public class Transaction {
     private Transaction() { }
 
     protected Transaction(Transactions.Type type, UUID uuid) {
-        //Validate.notNull(type, "Cannot create a new Transaction with a null Transaction.Type");
+        Validate.notNull(type, "Cannot create a new Transaction with a null Transaction.Type");
         this.type = type;
-        //Validate.notNull(uuid, "Cannot create a new Transaction with a null UUID");
-        // Validate doesn't get to exist because IntelliJ's being a penis
+        Validate.notNull(uuid, "Cannot create a new Transaction with a null UUID");
         this.uuid = uuid;
     }
 
