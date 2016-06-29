@@ -4,3 +4,42 @@ author: AaronMcH
 description: Useful perks
 website: https://neweden.co/
 version: 0.1
+softdepend: [PermissionsEx]
+commands:
+  bitchslap:
+    description: Bitch Slap a player
+    permission: perks.extras.bitchslap
+  brofist:
+    description: Fist Bump a player
+    permission: perks.extras.brofist
+  highfive:
+    description: HIgh Five a player
+    permission: perks.extras.highfive
+  pickup:
+    description: Pickup items around you in a radius
+    permission: perks.extras.pickup
+  prefix:
+    description: Change your chat prefix
+    permissions: perks.extras.prefix
+  pweather:
+    description: Change the current weather for you or another player
+    permissions: perks.extras.pweather
+  rainbowsheep:
+    description: Spawn one of every colour hseep around a player
+    permission: perks.extras.rainbowsheep
+  slap:
+    description: Slap a player
+    permission: perks.extras.slap
+permissions:
+   perks.extras.*:
+      description: Gives all Perks Extras permissions
+      default: op
+      children:
+         perks.extras.bitchslap: true
+         perks.extras.brofist: true
+         perks.extras.highfive: true
+         perks.extras.pickup: true
+         perks.extras.prefix: true
+         perks.extras.pweather: true
+         perks.extras.rainbowsheep: true
+         perks.extras.slap: true
