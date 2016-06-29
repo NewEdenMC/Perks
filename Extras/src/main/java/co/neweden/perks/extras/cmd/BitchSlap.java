@@ -35,7 +35,7 @@ public class BitchSlap implements CommandExecutor {
             senderName = ((Player) sender).getDisplayName();
 
         new PotionEffect(PotionEffectType.HARM, 1, 1).apply(target);
-        Bukkit.getServer().broadcastMessage(Util.formatString("&c" + target.getDisplayName() + "&7 was bitch slapped by &c" + senderName));
+        Bukkit.getServer().broadcastMessage(Util.formatString("&c" + target.getDisplayName() + "&7 has been bitch slapped by &c" + senderName));
 
         return true;
     }
