@@ -37,6 +37,7 @@
     <modules>
         <module>Core</module>
         <module>Vote</module>
+        <module>Extras</module>
     </modules>
 
     <repositories>
@@ -47,6 +48,10 @@
         <repository>
             <id>NewEden</id>
             <url>http://ci.neweden.co/plugin/repository/everything/</url>
+        </repository>
+        <repository>
+            <id>pex-repo</id>
+            <url>http://pex-repo.aoeu.xyz</url>
         </repository>
     </repositories>
 

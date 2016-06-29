@@ -28,6 +28,12 @@
             <version>1.10-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>ru.tehkode</groupId>
+            <artifactId>PermissionsEx</artifactId>
+            <version>1.23.2-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>
