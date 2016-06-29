@@ -14,6 +14,7 @@ public class Main extends JavaPlugin {
         new BroFist();
         new HighFive();
         new Prefix();
+        new RainbowSheep();
         new Slap();
     }
 
