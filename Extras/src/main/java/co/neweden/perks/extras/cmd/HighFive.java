@@ -10,9 +10,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class HIghFive implements CommandExecutor {
+public class HighFive implements CommandExecutor {
 
-    public HIghFive() {
+    public HighFive() {
         Main.getPlugin().getCommand("highfive").setExecutor(this);
     }
 
