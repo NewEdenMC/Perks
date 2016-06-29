@@ -44,5 +44,5 @@ permissions:
       perks.extras.rainbowsheep: true
       perks.extras.slap: true
       perks.extras.canttouchthis: true
-  perks.canttouchthis:
+  perks.extras.canttouchthis:
     description: Prevents a given player from being slapped or bitch slapped
