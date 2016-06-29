@@ -1,5 +1,6 @@
 package co.neweden.perks.extras;
 
+import co.neweden.perks.extras.cmd.BitchSlap;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
@@ -9,6 +10,7 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+        new BitchSlap();
     }
 
     public static Main getPlugin() { return plugin; }

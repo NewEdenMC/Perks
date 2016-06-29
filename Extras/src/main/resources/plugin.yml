@@ -31,15 +31,18 @@ commands:
     description: Slap a player
     permission: perks.extras.slap
 permissions:
-   perks.extras.*:
-      description: Gives all Perks Extras permissions
-      default: op
-      children:
-         perks.extras.bitchslap: true
-         perks.extras.brofist: true
-         perks.extras.highfive: true
-         perks.extras.pickup: true
-         perks.extras.prefix: true
-         perks.extras.pweather: true
-         perks.extras.rainbowsheep: true
-         perks.extras.slap: true
+  perks.extras.*:
+    description: Gives all Perks Extras permissions
+    default: op
+    children:
+      perks.extras.bitchslap: true
+      perks.extras.brofist: true
+      perks.extras.highfive: true
+      perks.extras.pickup: true
+      perks.extras.prefix: true
+      perks.extras.pweather: true
+      perks.extras.rainbowsheep: true
+      perks.extras.slap: true
+      perks.extras.canttouchthis: true
+  perks.canttouchthis:
+    description: Prevents a given player from being slapped or bitch slapped
