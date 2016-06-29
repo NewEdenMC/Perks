@@ -30,7 +30,7 @@ public class BroFist implements CommandExecutor {
         if (sender instanceof Player)
             senderName = ((Player) sender).getDisplayName();
 
-        new PotionEffect(PotionEffectType.HEALTH_BOOST, 1, 1).apply(target);
+        new PotionEffect(PotionEffectType.HEAL, 1, 1).apply(target);
         Bukkit.getServer().broadcastMessage(Util.formatString("&c" + senderName + "&7 fist bumped &c" + target.getDisplayName()));
 
         return true;
