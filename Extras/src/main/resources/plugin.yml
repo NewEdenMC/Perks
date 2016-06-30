@@ -47,5 +47,7 @@ permissions:
       perks.extras.canttouchthis: true
   perks.extras.canttouchthis:
     description: Prevents a given player from being slapped or bitch slapped
+  perks.extras.pweather.others:
+    description: Change the player specific weather for other players
   perks.extras.pickup.bypass:
     description: Bypass radius limitations

@@ -15,6 +15,7 @@ public class Main extends JavaPlugin {
         new HighFive();
         new Pickup();
         new Prefix();
+        new PWeather();
         new RainbowSheep();
         new Slap();
     }
