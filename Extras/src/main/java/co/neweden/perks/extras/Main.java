@@ -13,6 +13,7 @@ public class Main extends JavaPlugin {
         new BitchSlap();
         new BroFist();
         new HighFive();
+        new Pickup();
         new Prefix();
         new RainbowSheep();
         new Slap();

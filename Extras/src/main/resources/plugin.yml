@@ -39,6 +39,7 @@ permissions:
       perks.extras.brofist: true
       perks.extras.highfive: true
       perks.extras.pickup: true
+      perks.extras.pickup.bypass: true
       perks.extras.prefix: true
       perks.extras.pweather: true
       perks.extras.rainbowsheep: true
@@ -46,3 +47,5 @@ permissions:
       perks.extras.canttouchthis: true
   perks.extras.canttouchthis:
     description: Prevents a given player from being slapped or bitch slapped
+  perks.extras.pickup.bypass:
+    description: Bypass radius limitations
