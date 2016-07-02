@@ -8,6 +8,7 @@ import com.vexsoftware.votifier.bungee.events.VotifierEvent;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.md_5.bungee.event.EventHandler;
 
 import java.sql.PreparedStatement;
@@ -22,9 +23,13 @@ public class VoteManager implements Listener {
     private static Collection<VoteService> voteServices = new ArrayList<>();
     private static Set<String> recentVotes = new HashSet<>();
     private static int recentTotalVotes = 0;
+    private static boolean anonymousVotes = false;
+    private static ScheduledTask scheduler;
 
-    public VoteManager() {
-        Perks.getPlugion().getProxy().getScheduler().schedule(Perks.getPlugion(), () -> {
+    public VoteManager() { schedule(); }
+
+    private static void schedule() {
+        scheduler = Perks.getPlugion().getProxy().getScheduler().schedule(Perks.getPlugion(), () -> {
             broadcastRecentVotes();
         }, 0L, 1L, TimeUnit.MINUTES);
     }
@@ -82,9 +87,11 @@ public class VoteManager implements Listener {
         }
         vs.incrementTotalVotes();
 
-        if (event.getVote().getUsername() != null) {
+        if (event.getVote().getUsername().isEmpty())
+            anonymousVotes = true;
+        else
             recentVotes.add(event.getVote().getUsername());
-        }
+
         recentTotalVotes++;
 
         ProxiedPlayer player = ProxyServer.getInstance().getPlayer(event.getVote().getUsername());
@@ -122,28 +129,32 @@ public class VoteManager implements Listener {
     private static void broadcastRecentVotes() {
         if (recentTotalVotes < 1) return;
 
-        String names = "from &e&l";
-        for (String name : recentVotes) {
-            names += name + ", ";
+        String names = "";
+        if (!recentVotes.isEmpty()) {
+            if (anonymousVotes) recentVotes.add("others");
+            names = " from &e&l" + Util.formatListToString(recentVotes);
         }
-        names = names.substring(0, names.length() - 2);
 
         Perks.getPlugion().getProxy().broadcast(Util.formatStringToBaseComponent(
                 "&a\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\n" +
                 " \n" +
-                "&e&l" + recentTotalVotes + "&f&l votes recently " + names + "&f&l, type &e&l/vote&f&l to vote and earn credits\n" +
+                "&e&l" + recentTotalVotes + "&f&l " + Util.pluralise(recentTotalVotes, "vote(s)") + " recently" + names + "&f&l, type &e&l/vote&f&l to vote and earn credits to spend on perks\n" +
                 " \n" +
                 "&a\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580"
         ));
 
+        scheduler.cancel();
+        schedule();
         recentVotes.clear();
         recentTotalVotes = 0;
+        anonymousVotes = false;
     }
 
     public static void clearLocalCache() {
         voteServices.clear();
         recentVotes.clear();
         recentTotalVotes = 0;
+        anonymousVotes = false;
     }
 
 }

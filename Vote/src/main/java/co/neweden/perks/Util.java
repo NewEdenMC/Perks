@@ -8,6 +8,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.text.DecimalFormat;
+import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -99,6 +100,19 @@ public class Util {
             return UUID.fromString(uuid);
         } else
             return null;
+    }
+
+    public static String formatListToString(Collection<?> list) {
+        Object[] array = list.toArray();
+        String sList = "";
+        for (int i = 0; i < array.length; i++) {
+            sList += array[i].toString();
+            if (i < array.length - 2)
+                sList += ", ";
+            else if (i == array.length - 2)
+                sList += " and ";
+        }
+        return sList;
     }
 
 }
