@@ -4,10 +4,8 @@ import co.neweden.perks.Perks;
 import co.neweden.perks.Util;
 import co.neweden.perks.transactions.Transaction;
 import co.neweden.perks.transactions.Transactions;
-import com.mojang.api.profiles.Profile;
 import com.vexsoftware.votifier.bungee.events.VotifierEvent;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -126,7 +124,7 @@ public class VoteManager implements Listener {
                 " \n" +
                 "&e&l" + recentTotalVotes + "&f&l votes recently " + names + "&f&l, type &e&l/vote&f&l to vote and earn credits\n" +
                 " \n" +
-                "&a\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\n"
+                "&a\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580"
         ));
 
         recentVotes.clear();
