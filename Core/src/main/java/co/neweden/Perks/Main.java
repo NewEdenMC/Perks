@@ -127,6 +127,7 @@ public class Main extends JavaPlugin implements Listener {
                     "CREATE TABLE IF NOT EXISTS `players` (\n" +
                     "  `uuid` varchar(36) NOT NULL,\n" +
                     "  `balance` double NOT NULL DEFAULT 0,\n" +
+                    "  `lastVote` INT(11) NOT NULL DEFAULT 0,\n" +
                     "  PRIMARY KEY (`uuid`)\n" +
                     ");"
             );

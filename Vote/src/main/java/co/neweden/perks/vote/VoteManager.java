@@ -101,6 +101,15 @@ public class VoteManager implements Listener {
             Perks.setBalance(uuid, Perks.getBalance(uuid) + vs.getCurrencyPerVote());
             t.setStatus(Transactions.Status.COMPLETE);
 
+            try {
+                PreparedStatement st = Perks.getDB().prepareStatement("UPDATE players SET lastVote=? WHERE uuid=?;\n");
+                st.setLong(1, System.currentTimeMillis() / 1000);
+                st.setString(2, uuid.toString());
+                st.executeUpdate();
+            } catch (SQLException e) {
+                Perks.getPlugion().getLogger().log(Level.SEVERE, "An SQL Exception ocurred while setting lastVote for player " + uuid, e);
+            }
+
             if (player != null)
                 player.sendMessage(Util.formatStringToBaseComponent("&7Thanks for voting! You have earned &c" + Util.formatCurrency(vs.getCurrencyPerVote()) + "&7, type &c/vote&7 to vote again, and &c/perks&7 to see what you can buy."));
 

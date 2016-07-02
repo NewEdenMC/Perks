@@ -1,5 +1,6 @@
 package co.neweden.perks;
 
+import co.neweden.perks.vote.Reminder;
 import co.neweden.perks.vote.VoteCommand;
 import co.neweden.perks.vote.VoteManager;
 import net.md_5.bungee.api.ProxyServer;
@@ -22,7 +23,9 @@ public class Main extends Plugin {
         Perks.plugin = this;
         startup();
         ProxyServer.getInstance().getPluginManager().registerListener(this, new VoteManager());
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new Reminder());
         getProxy().getPluginManager().registerCommand(this, new VoteCommand());
+        Reminder.scheduleReminders();
     }
 
     private boolean startup() {
