@@ -70,7 +70,7 @@ public final class Util {
 		timeInSeconds -= TimeUnit.MINUTES.toSeconds(minutes);
 
 		long seconds = TimeUnit.SECONDS.toSeconds(timeInSeconds);
-		out += seconds > 0 ? seconds + (shortTimeLabels ? "s" : pluralise(seconds, " second(s) ")) : "";
+		out += seconds > 0 ? seconds + (shortTimeLabels ? "s" : pluralise(seconds, " second(s)")) : "";
 		return out;
 	}
 
