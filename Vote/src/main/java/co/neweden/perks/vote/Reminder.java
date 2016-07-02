@@ -25,8 +25,9 @@ public class Reminder implements Listener {
 
     public static void scheduleReminders() {
         Perks.getPlugion().getProxy().getScheduler().schedule(Perks.getPlugion(), () -> {
+            long reminderPeriod = getReminderPeriod();
             for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
-                remindPlayer(player, getReminderPeriod());
+                remindPlayer(player, reminderPeriod);
             }
         }, 0L, 1L, TimeUnit.MINUTES);
     }
@@ -46,7 +47,7 @@ public class Reminder implements Listener {
             st.setString(1, player.getUniqueId().toString());
             ResultSet rs = st.executeQuery();
             if (!rs.next()) return;
-            if (rs.getLong("lastVote") + reminderPeriod > System.currentTimeMillis() / 1000) return;
+            if (rs.getLong("lastVote") == 0 || rs.getLong("lastVote") + reminderPeriod > System.currentTimeMillis() / 1000) return;
             player.sendMessage(Util.formatStringToBaseComponent(
                     "&a\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\n" +
                     " \n" +
