@@ -335,6 +335,11 @@ public class Main extends JavaPlugin implements Listener {
                 .setMaterial(Material.GOLD_INGOT)
                 .setDisplayName("&6&lYour current balance")
                 .addHoverText("&e&l" + Util.formatCurrency(Perks.getBalance(event.getOpener())));
+        instance.getSlot(balanceSlot - 1)
+                .setMaterial(Material.NETHER_STAR)
+                .setDisplayName("&bVote")
+                .addHoverText("&7Click here for more information about earning credits by voting.")
+                .addHoverText("&cType /vote to see where you can vote.");
     }
 
 }
