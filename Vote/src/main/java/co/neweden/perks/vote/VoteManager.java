@@ -104,7 +104,7 @@ public class VoteManager implements Listener {
             t.setStatus(Transactions.Status.COMPLETE);
 
             if (player != null)
-                player.sendMessage(Util.formatStringToBaseComponent("&aThanks for voting on '" + vs.getDisplayName() + "' you have earned " + Util.formatCurrency(vs.getCurrencyPerVote()) + ", type /vote to see where else you may be able to vote."));
+                player.sendMessage(Util.formatStringToBaseComponent("&7Thanks for voting! You have earned &c" + Util.formatCurrency(vs.getCurrencyPerVote()) + "&7, type &c/vote&7 to vote again, and &c/perks&7 to see what you can buy."));
 
         }
 
@@ -114,12 +114,20 @@ public class VoteManager implements Listener {
 
     private static void broadcastRecentVotes() {
         if (recentTotalVotes < 1) return;
-        String message = "&a" + recentTotalVotes + " votes recently from ";
+
+        String names = "from &e&l";
         for (String name : recentVotes) {
-            message = message + name + ", ";
+            names += name + ", ";
         }
-        message = message.substring(0, message.length() - 2);
-        Perks.getPlugion().getProxy().broadcast(Util.formatStringToBaseComponent(message));
+        names = names.substring(0, names.length() - 2);
+
+        Perks.getPlugion().getProxy().broadcast(Util.formatStringToBaseComponent(
+                "&a\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\n" +
+                " \n" +
+                "&e&l" + recentTotalVotes + "&f&l votes recently " + names + "&f&l, type &e&l/vote&f&l to vote and earn credits\n" +
+                " \n" +
+                "&a\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\n"
+        ));
 
         recentVotes.clear();
         recentTotalVotes = 0;

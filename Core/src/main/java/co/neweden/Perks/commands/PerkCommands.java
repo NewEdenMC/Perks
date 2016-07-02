@@ -7,6 +7,8 @@ import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.concurrent.TimeUnit;
+
 public class PerkCommands {
 
     @SubCommandHelp(
@@ -61,9 +63,23 @@ public class PerkCommands {
             player.sendMessage(Util.formatString("&eWarning you won't be able to use the perk '" + perk.getDisplayName() + "' in '" + Perks.getCurrentRealm().getDisplayName() + "' which is the realm you are in currently"));
         }
 
-        if (perk.purchasePerk(player))
-            player.sendMessage(Util.formatString("&aYou have just purchased " + perk.getDisplayName()));
-        else
+        if (perk.purchasePerk(player)) {
+            String expire = "Never expires";
+            if (perk.getTimeLength() > -1)
+                expire = Util.formatTime(perk.getTimeLength(), TimeUnit.MINUTES);
+
+            player.sendMessage(Util.formatString(
+                    "&a\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\n" +
+                    " \n" +
+                    "&f&lCongratulations! You have just purchased &e&l" + perk.getDisplayName() + "&f&l, it is now active and ready to use, the cost has been deducted from your balance.\n" +
+                    " \n" +
+                    "&fCost: &b" + Util.formatCurrency(perk.getCost()) + "\n" +
+                    "&fYOur new balance after purchase: &b" + Util.formatCurrency(Perks.getBalance(player)) + "\n" +
+                    "&fPerk expires: &b" + expire + "\n" +
+                    " \n" +
+                    "&a\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\n"
+            ));
+        } else
             player.sendMessage(Util.formatString("&cAn unknown error occurred while trying to purchase this perk, please contact a member of staff."));
     }
 

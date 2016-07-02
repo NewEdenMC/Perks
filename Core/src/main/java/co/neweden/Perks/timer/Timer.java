@@ -87,7 +87,13 @@ public class Timer implements Listener {
                     if (currentTime < perk.expire) continue;
                     if (!perk.perk.removePerk(perk.player, Perk.RemoveStatus.EXPIRE)) continue;
                     perks.remove(perk);
-                    perk.player.sendMessage(Util.formatString("&eThe perk '" + perk.perk.getDisplayName() + "' has now expired, you can purchase it again"));
+                    perk.player.sendMessage(Util.formatString(
+                            "&a\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\n" +
+                            " \n" +
+                            "&f&lThe perk &e&l" + perk.perk.getDisplayName() + "&f&l has now expired, you can now purchase it again\n" +
+                            " \n" +
+                            "&a\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\n"
+                    ));
                 }
             }
         }.runTaskTimer(Perks.getPlugion(), 0L, 300L);
