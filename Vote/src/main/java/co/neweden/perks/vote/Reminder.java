@@ -51,7 +51,7 @@ public class Reminder implements Listener {
             player.sendMessage(Util.formatStringToBaseComponent(
                     "&a\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\n" +
                     " \n" +
-                    "&f&lThe last time you voted was over " + Util.formatTime(reminderPeriod, TimeUnit.SECONDS, false) + " ago, to vote again and earn more credits for perks, type /vote and vote on the available services.\n" +
+                    "&f&lThe last time you voted was over " + Util.formatTime(reminderPeriod, TimeUnit.SECONDS, false) + " ago, to vote again and earn more " + Perks.getConfigSetting("currency_reference_name", "money") + " for perks, type /vote and vote on the available services.\n" +
                     " \n" +
                     "&a\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580"
             ));

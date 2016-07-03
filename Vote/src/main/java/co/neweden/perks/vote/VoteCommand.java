@@ -1,5 +1,6 @@
 package co.neweden.perks.vote;
 
+import co.neweden.perks.Perks;
 import co.neweden.perks.Util;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -34,7 +35,7 @@ public class VoteCommand extends Command {
         if (!canVote)
             sender.sendMessage(Util.formatStringToBaseComponent("&7No voting services available :("));
 
-        sender.sendMessage(Util.formatStringToBaseComponent("\n&bBy voting you will earn credits which can be used to buy perks, type /perks for more info."));
+        sender.sendMessage(Util.formatStringToBaseComponent("\n&bBy voting you will earn " + Perks.getConfigSetting("currency_reference_name", "money") + " which can be used to buy perks, type /perks for more info."));
     }
 
 }

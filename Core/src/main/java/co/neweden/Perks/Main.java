@@ -173,6 +173,10 @@ public class Main extends JavaPlugin implements Listener {
             stSV.setString(1, "currency_suffix");
             stSV.setString(2, "credit(s)");
             stSV.executeUpdate();
+
+            stSV.setString(1, "currency_reference_name");
+            stSV.setString(2, "credits");
+            stSV.executeUpdate();
         } catch (SQLException e) {
             getLogger().log(Level.SEVERE, "Unable to setup setup database", e);
             return false;
@@ -339,7 +343,7 @@ public class Main extends JavaPlugin implements Listener {
         instance.getSlot(balanceSlot - 1)
                 .setMaterial(Material.NETHER_STAR)
                 .setDisplayName("&bVote")
-                .addHoverText("&7Click here for more information about earning credits by voting.")
+                .addHoverText("&7Click here for more information about earning " + Perks.getConfigSetting("currency_reference_name", "money") + " by voting.")
                 .addHoverText("&cType /vote to see where you can vote.");
     }
 

@@ -99,8 +99,14 @@ public class Main extends Plugin {
             );
 
             PreparedStatement stS = Perks.getDB().prepareStatement("INSERT INTO config (`setting`) VALUES (?) ON DUPLICATE KEY UPDATE setting=setting;");
+            PreparedStatement stSV = Perks.getDB().prepareStatement("INSERT INTO config (`setting`,`value`) VALUES (?,?) ON DUPLICATE KEY UPDATE setting=setting;");
+
             stS.setString(1, "vote_reminder_period");
             stS.executeUpdate();
+
+            stSV.setString(1, "currency_reference_name");
+            stSV.setString(2, "credits");
+            stSV.executeUpdate();
         } catch (SQLException e) {
             getLogger().log(Level.SEVERE, "Unable to setup setup database", e);
             return false;

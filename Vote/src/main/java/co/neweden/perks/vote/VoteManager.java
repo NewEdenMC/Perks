@@ -138,7 +138,7 @@ public class VoteManager implements Listener {
         Perks.getPlugion().getProxy().broadcast(Util.formatStringToBaseComponent(
                 "&a\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\n" +
                 " \n" +
-                "&e&l" + recentTotalVotes + "&f&l " + Util.pluralise(recentTotalVotes, "vote(s)") + " recently" + names + "&f&l, type &e&l/vote&f&l to vote and earn credits to spend on perks\n" +
+                "&e&l" + recentTotalVotes + "&f&l " + Util.pluralise(recentTotalVotes, "vote(s)") + " recently" + names + "&f&l, type &e&l/vote&f&l to vote and earn " + Perks.getConfigSetting("currency_reference_name", "money") + " to spend on perks\n" +
                 " \n" +
                 "&a\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580"
         ));
