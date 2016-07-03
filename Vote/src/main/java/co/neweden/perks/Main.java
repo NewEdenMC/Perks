@@ -11,6 +11,7 @@ import net.md_5.bungee.config.YamlConfiguration;
 
 import java.io.*;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
 
@@ -96,6 +97,10 @@ public class Main extends Plugin {
                     "  `totalVotes` INT NOT NULL DEFAULT 0,\n" +
                     "  PRIMARY KEY (`id`));\n"
             );
+
+            PreparedStatement stS = Perks.getDB().prepareStatement("INSERT INTO config (`setting`) VALUES (?) ON DUPLICATE KEY UPDATE setting=setting;");
+            stS.setString(1, "vote_reminder_period");
+            stS.executeUpdate();
         } catch (SQLException e) {
             getLogger().log(Level.SEVERE, "Unable to setup setup database", e);
             return false;
