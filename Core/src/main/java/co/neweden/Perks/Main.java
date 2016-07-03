@@ -342,8 +342,8 @@ public class Main extends JavaPlugin implements Listener {
                 .addHoverText("&e&l" + Util.formatCurrency(Perks.getBalance(event.getOpener())));
         instance.getSlot(balanceSlot - 1)
                 .setMaterial(Material.NETHER_STAR)
-                .setDisplayName("&bVote")
-                .addHoverText("&7Click here for more information about earning " + Perks.getConfigSetting("currency_reference_name", "money") + " by voting.")
+                .setDisplayName("&bVoting")
+                .addHoverText("&7To earn " + Perks.getConfigSetting("currency_reference_name", "money") + " you need to vote for us on websites, usually you can vote once per day on each site.")
                 .addHoverText("&cType /vote to see where you can vote.");
     }
 
