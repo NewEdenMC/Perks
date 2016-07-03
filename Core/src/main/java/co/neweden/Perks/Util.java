@@ -100,9 +100,10 @@ public final class Util {
 
 		HttpProfileRepository hpr = new HttpProfileRepository("minecraft");
 		Profile[] p = hpr.findProfilesByNames(name);
-		if (p.length > 0)
-			return Bukkit.getOfflinePlayer(UUID.fromString(p[0].getId()));
-		else
+		if (p.length > 0) {
+			String uuid = p[0].getId().replaceFirst("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5");
+			return Bukkit.getOfflinePlayer(UUID.fromString(uuid));
+		} else
 			return null;
 	}
 
