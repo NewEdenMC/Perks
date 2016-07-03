@@ -53,7 +53,7 @@ public class PlayerCommands {
             OfflinePlayer offlinePlayer = Util.getOfflinePlayer(playerName);
             if (offlinePlayer == null)
                 throw new CommandException("The player '" + playerName + "' has either never played before or has changed their name since last login.");
-            sender.sendMessage(Util.formatString("&e'" + playerName + "' is not offline, therefor active permissions are not available, here are the expected permissions"));
+            sender.sendMessage(Util.formatString("&e'" + playerName + "' is offline, therefor active permissions are not available, here are the expected permissions"));
             permsMap = Permissions.getPermsMap(offlinePlayer);
         } else {
             sender.sendMessage(Util.formatString("&bActive permissions for '" + playerName + "'"));
@@ -65,8 +65,9 @@ public class PlayerCommands {
         }
         for (Map.Entry<String, Collection<Perk>> perm : permsMap.entrySet()) {
             String p = "&f- " + perm.getKey();
-            if (perm.getValue().isEmpty())
-                sender.sendMessage(Util.formatString(p));
+            if (perm.getValue().isEmpty()) {
+                sender.sendMessage(Util.formatString(p)); continue;
+            }
             p += " (";
             for (Perk perk : perm.getValue()) {
                 p += perk.getName() + ", ";
