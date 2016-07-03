@@ -1,5 +1,7 @@
 package co.neweden.perks;
 
+import org.apache.commons.lang.Validate;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,8 +19,7 @@ public class Perks {
     public static Connection getDB() { return db; }
 
     public static Double getBalance(UUID uuid) {
-        //Validate.notNull(uuid, "Null UUID object passed to getBalance method");
-        // Validate doesn't get to exist because IntelliJ's being a penis
+        Validate.notNull(uuid, "Null UUID object passed to getBalance method");
         try {
             PreparedStatement st = Perks.getDB().prepareStatement("SELECT balance FROM players WHERE uuid=?;");
             st.setString(1, uuid.toString());
@@ -32,9 +33,8 @@ public class Perks {
     }
 
     public static void setBalance(UUID uuid, Double newBalance) {
-        //Validate.notNull(uuid, "Null UUID object passed to setBalance method");
-        //Validate.notNull(newBalance, "Null Double object passed to setBalance method for newBalance");
-        // Validate doesn't get to exist because IntelliJ's being a penis
+        Validate.notNull(uuid, "Null UUID object passed to setBalance method");
+        Validate.notNull(newBalance, "Null Double object passed to setBalance method for newBalance");
         try {
             PreparedStatement st = Perks.getDB().prepareStatement("REPLACE INTO players SET uuid=?, balance=?;");
             st.setString(1, uuid.toString());
