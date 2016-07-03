@@ -74,7 +74,7 @@ public class PerkCommands {
                     "&f&lCongratulations! You have just purchased &e&l" + perk.getDisplayName() + "&f&l, it is now active and ready to use, the cost has been deducted from your balance.\n" +
                     " \n" +
                     "&fCost: &b" + Util.formatCurrency(perk.getCost()) + "\n" +
-                    "&fYOur new balance after purchase: &b" + Util.formatCurrency(Perks.getBalance(player)) + "\n" +
+                    "&fYour new balance after purchase: &b" + Util.formatCurrency(Perks.getBalance(player)) + "\n" +
                     "&fPerk expires: &b" + expire + "\n" +
                     " \n" +
                     "&a\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580\u2580"
