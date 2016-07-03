@@ -121,7 +121,7 @@ public class Permissions implements Listener {
         for (PermNodeCache perm : perms) {
             if (!perm.perks.contains(perk)) continue;
             perm.perks.remove(perk);
-            attachments.get(permissible).unsetPermission(perm.name);
+            if (perm.perks.isEmpty()) attachments.get(permissible).unsetPermission(perm.name);
         }
         // Cleanup
         for (PermNodeCache perm : new ArrayList<>(perms)) {
