@@ -293,17 +293,19 @@ public class Main extends JavaPlugin implements Listener {
                     .setMaterial(perk.getMenuMaterial())
                     .setDisplayName(perk.getDisplayName());
 
-            if (!perk.getDescription().isEmpty())
-                slot.addHoverText(perk.getDescription());
-            slot.addHoverText("&lCost:&f " + Util.formatCurrency(perk.getCost()));
+            if (!perk.getDescription().isEmpty()) {
+                slot.addHoverText("&7" + perk.getDescription());
+                slot.addHoverText("&7 ");
+            }
+            slot.addHoverText("&lCost:&b " + Util.formatCurrency(perk.getCost()));
 
             if (perk.getTimeLength() == -1)
-                slot.addHoverText("&lDuration:&f Never expires");
+                slot.addHoverText("&lDuration:&b Never expires");
             else
-                slot.addHoverText("&lDuration:&f " + Util.formatTime(perk.getTimeLength(), TimeUnit.MINUTES));
+                slot.addHoverText("&lDuration:&b " + Util.formatTime(perk.getTimeLength(), TimeUnit.MINUTES));
 
             if (perk.isMemberOfAllRealms())
-                slot.addHoverText("&lRealms:&f Can be used in all realms");
+                slot.addHoverText("&lRealms:&b Can be used in all realms");
             else {
                 String realms = "Can be used in ";
                 int i = 0;
@@ -313,7 +315,7 @@ public class Main extends JavaPlugin implements Listener {
                     if (perk.getMemberRealms().size() - 1 != i) realms += ", ";
                     i++;
                 }
-                slot.addHoverText("&lRealms:&f " + realms);
+                slot.addHoverText("&lRealms:&b " + realms);
             }
 
             if (!perk.getMemberRealms().contains(Perks.getCurrentRealm())) {
@@ -325,9 +327,10 @@ public class Main extends JavaPlugin implements Listener {
             switch (ps) {
                 case OWNS_PERK: statusMessage = "&7You already own this perk"; break;
                 case HAS_ALL_PERMISSIONS: statusMessage = "&7You automatically have this perk based on your current permissions"; break;
-                case INSUFFICIENT_FUNDS: statusMessage = "&cYou do not have enough credit to buy this perk"; break;
+                case INSUFFICIENT_FUNDS: statusMessage = "&cYou do not have enough " + Perks.getConfigSetting("currency_reference_name", "money") + " to buy this perk"; break;
                 case CAN_PURCHASE: statusMessage = "&aYou can purchase this perk"; break;
             }
+            slot.addHoverText("&f ");
             slot.addHoverText(Util.formatString(statusMessage));
             if (ps.equals(Perk.PurchaseStatus.CAN_PURCHASE))
                 slot.setClickCommand("perks perk " + perk.getName() + " buy");
