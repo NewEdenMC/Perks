@@ -30,7 +30,7 @@ public class Main extends Plugin {
     }
 
     private boolean startup() {
-        return !loadConfig() || !loadDBConnection() || !VoteManager.buildVoteServicesCache();
+        return !loadConfig() || !loadDBConnection() || !setupDB() || !VoteManager.buildVoteServicesCache();
     }
 
     private boolean loadConfig() {
