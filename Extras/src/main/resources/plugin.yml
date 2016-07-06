@@ -36,18 +36,27 @@ permissions:
     default: op
     children:
       perks.extras.bitchslap: true
+      perks.extras.bitchslap.bypass.cooldown: true
       perks.extras.brofist: true
       perks.extras.highfive: true
       perks.extras.pickup: true
-      perks.extras.pickup.bypass: true
+      perks.extras.pickup.bypass.cooldown: true
+      perks.extras.pickup.bypass.radius: true
       perks.extras.prefix: true
       perks.extras.pweather: true
       perks.extras.rainbowsheep: true
       perks.extras.slap: true
+      perks.extras.slap.bypass.cooldown: true
       perks.extras.canttouchthis: true
+  perks.extras.bitchslap.bypass.cooldown:
+    description: Bypass cooldown
   perks.extras.canttouchthis:
     description: Prevents a given player from being slapped or bitch slapped
   perks.extras.pweather.others:
     description: Change the player specific weather for other players
-  perks.extras.pickup.bypass:
+  perks.extras.pickup.bypass.cooldown:
+    description: Bypass cooldown
+  perks.extras.pickup.bypass.radius:
     description: Bypass radius limitations
+  perks.extras.slap.bypass.cooldown:
+    description: Bypass cooldown

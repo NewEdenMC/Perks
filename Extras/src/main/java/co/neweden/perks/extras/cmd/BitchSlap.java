@@ -1,5 +1,6 @@
 package co.neweden.perks.extras.cmd;
 
+import co.neweden.perks.extras.Cooldown;
 import co.neweden.perks.extras.Main;
 import co.neweden.perks.extras.Util;
 import org.bukkit.Bukkit;
@@ -12,6 +13,8 @@ import org.bukkit.potion.PotionEffectType;
 
 public class BitchSlap implements CommandExecutor {
 
+    Cooldown cooldown = new Cooldown(10);
+
     public BitchSlap() {
         Main.getPlugin().getCommand("bitchslap").setExecutor(this);
     }
@@ -19,6 +22,11 @@ public class BitchSlap implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (args.length < 1) {
             sender.sendMessage(Util.formatString("&cYou must specify an online player")); return true;
+        }
+
+        long cooldownEnd = cooldown.getCooldown(sender);
+        if (cooldownEnd > 0) {
+            sender.sendMessage(Util.formatString("&cYou cannot run this command so soon after you last ran it, you must wait " + cooldownEnd + " seconds")); return true;
         }
 
         Player target = Bukkit.getPlayer(args[0]);
@@ -35,6 +43,7 @@ public class BitchSlap implements CommandExecutor {
             senderName = ((Player) sender).getDisplayName();
 
         new PotionEffect(PotionEffectType.HARM, 1, 1).apply(target);
+        cooldown.setCooldown(sender);
         Bukkit.getServer().broadcastMessage(Util.formatString("&c" + target.getDisplayName() + "&7 has been bitch slapped by &c" + senderName));
 
         return true;
