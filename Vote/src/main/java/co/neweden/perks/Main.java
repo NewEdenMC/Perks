@@ -104,6 +104,10 @@ public class Main extends Plugin {
             stS.setString(1, "vote_reminder_period");
             stS.executeUpdate();
 
+            stSV.setString(1, "vote_reminder_interval");
+            stSV.setString(2, "3600");
+            stSV.executeUpdate();
+
             stSV.setString(1, "currency_reference_name");
             stSV.setString(2, "credits");
             stSV.executeUpdate();

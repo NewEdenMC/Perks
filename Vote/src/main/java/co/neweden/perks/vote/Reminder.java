@@ -29,16 +29,7 @@ public class Reminder implements Listener {
             for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
                 remindPlayer(player, reminderPeriod);
             }
-        }, 0L, 1L, TimeUnit.MINUTES);
-    }
-
-    private static long getReminderPeriod() {
-        try {
-            return Long.parseLong(Perks.getConfigSetting("vote_reminder_period", "86400"));
-        } catch (NumberFormatException e) {
-            Perks.getPlugion().getLogger().log(Level.WARNING, "Tried to get config value vote_reminder_period, but value is not a number: " + e.getMessage());
-        }
-        return 86400L;
+        }, 0L, Perks.getConfigSetting("vote_reminder_interval", 3600), TimeUnit.SECONDS);
     }
 
     private static void remindPlayer(ProxiedPlayer player, long reminderPeriod) {
