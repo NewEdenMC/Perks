@@ -19,13 +19,13 @@ public class Reminder implements Listener {
     @EventHandler
     public void onPostLogin(PostLoginEvent event) {
         Perks.getPlugion().getProxy().getScheduler().schedule(Perks.getPlugion(), () -> {
-            remindPlayer(event.getPlayer(), getReminderPeriod());
+            remindPlayer(event.getPlayer(), Perks.getConfigSetting("vote_reminder_period", 86400));
         }, 3L, TimeUnit.SECONDS);
     }
 
     public static void scheduleReminders() {
         Perks.getPlugion().getProxy().getScheduler().schedule(Perks.getPlugion(), () -> {
-            long reminderPeriod = getReminderPeriod();
+            long reminderPeriod = Perks.getConfigSetting("vote_reminder_period", 86400);
             for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
                 remindPlayer(player, reminderPeriod);
             }
