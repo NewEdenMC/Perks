@@ -59,7 +59,7 @@ public class Perks {
         return defValue;
     }
 
-    private static long getConfigSetting(String setting, long defValue) {
+    public static long getConfigSetting(String setting, long defValue) {
         try {
             return Long.parseLong(Perks.getConfigSetting(String.valueOf(setting), String.valueOf(defValue)));
         } catch (NumberFormatException e) {
