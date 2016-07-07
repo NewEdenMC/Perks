@@ -59,6 +59,15 @@ public class Perks {
         return defValue;
     }
 
+    private static long getConfigSetting(long setting, long defValue) {
+        try {
+            return Long.parseLong(Perks.getConfigSetting(String.valueOf(setting), String.valueOf(defValue)));
+        } catch (NumberFormatException e) {
+            Perks.getPlugion().getLogger().log(Level.WARNING, "Tried to get config value " + setting + ", but value is not a number: " + e.getMessage());
+        }
+        return defValue;
+    }
+
     public static void setConfigSetting(String setting, String value) {
         try {
             PreparedStatement st = Perks.getDB().prepareStatement("REPLACE INTO config SET setting=?, value=?;");
