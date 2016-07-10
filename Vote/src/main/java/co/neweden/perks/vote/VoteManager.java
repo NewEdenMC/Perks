@@ -31,7 +31,7 @@ public class VoteManager implements Listener {
     private static void schedule() {
         scheduler = Perks.getPlugion().getProxy().getScheduler().schedule(Perks.getPlugion(), () -> {
             broadcastRecentVotes();
-        }, 0L, 1L, TimeUnit.MINUTES);
+        }, 0L, Perks.getConfigSetting("vote_broadcast_frequency", 120), TimeUnit.SECONDS);
     }
 
     public static Collection<VoteService> getVoteServices() { return new ArrayList<>(voteServices); }

@@ -108,6 +108,10 @@ public class Main extends Plugin {
             stSV.setString(2, "3600");
             stSV.executeUpdate();
 
+            stSV.setString(1, "vote_broadcast_frequency");
+            stSV.setString(2, "120");
+            stSV.executeUpdate();
+
             stSV.setString(1, "currency_reference_name");
             stSV.setString(2, "credits");
             stSV.executeUpdate();
