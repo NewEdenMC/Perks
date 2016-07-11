@@ -1,5 +1,5 @@
 name: Perks
 main: co.neweden.perks.Main
 author: AaronMcH
-version: 0.1
+version: 1.0-RELEASE
 depend: [NuVotifier]

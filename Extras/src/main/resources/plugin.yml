@@ -3,7 +3,7 @@ main: co.neweden.perks.extras.Main
 author: AaronMcH
 description: Useful perks
 website: https://neweden.co/
-version: 0.1
+version: 1.0-RELEASE
 softdepend: [PermissionsEx]
 commands:
   bitchslap:
