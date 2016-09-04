@@ -8,12 +8,11 @@ import co.neweden.Perks.permissions.Permissions;
 import co.neweden.Perks.timer.Timer;
 import co.neweden.Perks.transactions.Transactions;
 import co.neweden.menugui.*;
-import co.neweden.menugui.menu.InventorySlot;
-import co.neweden.menugui.menu.MenuInstance;
-import co.neweden.menugui.menu.MenuPopulateEvent;
+import co.neweden.menugui.menu.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,10 +23,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 public class Main extends JavaPlugin implements Listener {
+
+    private Map<MenuInstance, Boolean> hideOwnedPerks = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -284,11 +287,21 @@ public class Main extends JavaPlugin implements Listener {
         if (realm == null) return;
         MenuInstance instance = event.getMenuInstance();
 
+        boolean hideOwned = false;
+        if (hideOwnedPerks.get(instance) != null)
+            hideOwned = hideOwnedPerks.get(instance);
+
         for (Perk perk : Perks.getPerks()) {
             if (!perk.getMemberRealms().contains(realm))
                 continue;
 
             InventorySlot slot = instance.getSlot(perk.getMenuSlot());
+
+            boolean hasPerk = !(perk.purchaseStatus(event.getOpener()).equals(Perk.PurchaseStatus.CAN_PURCHASE));
+            if (hasPerk && hideOwned) {
+                slot.setMaterial(Material.AIR);
+                continue;
+            }
             slot
                     .setMaterial(perk.getMenuMaterial())
                     .setDisplayName(perk.getDisplayName());
@@ -338,6 +351,7 @@ public class Main extends JavaPlugin implements Listener {
             if (perk.getMenuAnimationJSON() != null)
                 slot.animationFromJSON(perk.getMenuAnimationJSON());
         }
+
         int balanceSlot = (instance.getMenu().getNumRows() * 9) - 5;
         instance.getSlot(balanceSlot)
                 .setMaterial(Material.GOLD_INGOT)
@@ -348,6 +362,23 @@ public class Main extends JavaPlugin implements Listener {
                 .setDisplayName("&bVoting")
                 .addHoverText("&7To earn " + Perks.getConfigSetting("currency_reference_name", "money") + " you need to vote for us on websites, usually you can vote once per day on each site.")
                 .addHoverText("&cType /vote to see where you can vote.");
+
+        boolean toHide = !hideOwned;
+
+        SlotFrame toggleSlot = instance.getSlot(instance.getMenu().getNumRows() * 9 - 1)
+                .setMaterial(Material.INK_SACK)
+                .setDurability((short) 10)
+                .setDisplayName("Hide Perks you currently have")
+                .runOnClick(new MenuRunnable() {
+                    @Override
+                    public void run() {
+                        hideOwnedPerks.put(getMenuInstance(), toHide);
+                        getMenuInstance().repopulate();
+                    }
+                });
+
+        if (hideOwned)
+            toggleSlot.setDurability((short) 8).setDisplayName("Show Perks you currently have");
     }
 
 }
