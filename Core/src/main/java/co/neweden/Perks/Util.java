@@ -56,17 +56,20 @@ public final class Util {
 
 		long days = TimeUnit.SECONDS.toDays(timeInSeconds);
 		out += days > 0 ? days + (shortTimeLabels ? "d " : pluralise(days, " day(s) ")) : "";
-		if (limitTo.equals(TimeUnit.DAYS)) return out.substring(0, out.length() - 1);
+		if (limitTo.equals(TimeUnit.DAYS))
+			return out.length() > 0 ? out.substring(0, out.length() - 1) : out;
 		timeInSeconds -= TimeUnit.DAYS.toSeconds(days);
 
 		long hours = TimeUnit.SECONDS.toHours(timeInSeconds);
 		out += hours > 0 ? hours + (shortTimeLabels ? "h " : pluralise(hours, " hour(s) ")) : "";
-		if (limitTo.equals(TimeUnit.HOURS)) return out.substring(0, out.length() - 1);
+		if (limitTo.equals(TimeUnit.HOURS))
+			return out.length() > 0 ? out.substring(0, out.length() - 1) : out;
 		timeInSeconds -= TimeUnit.HOURS.toSeconds(hours);
 
 		long minutes = TimeUnit.SECONDS.toMinutes(timeInSeconds);
 		out += minutes > 0 ? minutes + (shortTimeLabels ? "m " : pluralise(minutes, " minute(s) ")) : "";
-		if (limitTo.equals(TimeUnit.MINUTES)) return out.substring(0, out.length() - 1);
+		if (limitTo.equals(TimeUnit.MINUTES))
+			return out.length() > 0 ? out.substring(0, out.length() - 1) : out;
 		timeInSeconds -= TimeUnit.MINUTES.toSeconds(minutes);
 
 		long seconds = TimeUnit.SECONDS.toSeconds(timeInSeconds);
