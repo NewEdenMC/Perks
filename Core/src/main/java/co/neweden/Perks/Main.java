@@ -83,7 +83,7 @@ public class Main extends JavaPlugin implements Listener {
             return false;
         }
 
-        String url = String.format("jdbc:mysql://%s:%s/%s", host, port, database);
+        String url = String.format("jdbc:mysql://%s:%s/%s?autoReconnect=true", host, port, database);
 
         try {
             Perks.db = DriverManager.getConnection(url, getConfig().getString("mysql.user", ""), getConfig().getString("mysql.password", ""));
