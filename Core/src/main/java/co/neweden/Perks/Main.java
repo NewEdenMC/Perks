@@ -35,7 +35,7 @@ public class Main extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         Perks.plugin = this;
-        startup();
+        if (!startup()) getServer().getPluginManager().disablePlugin(this);
         HelpPages.registerClass(CommandMain.class);
         HelpPages.registerClass(PerkCommands.class);
         HelpPages.registerClass(PlayerCommands.class);
