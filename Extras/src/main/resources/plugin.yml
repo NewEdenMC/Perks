@@ -20,10 +20,10 @@ commands:
     permission: perks.extras.pickup
   prefix:
     description: Change your chat prefix
-    permissions: perks.extras.prefix
+    permission: perks.extras.prefix
   pweather:
     description: Change the current weather for you or another player
-    permissions: perks.extras.pweather
+    permission: perks.extras.pweather
   rainbowsheep:
     description: Spawn one of every colour hseep around a player
     permission: perks.extras.rainbowsheep
@@ -35,6 +35,7 @@ permissions:
     description: Gives all Perks Extras permissions
     default: op
     children:
+      perks.extras.canttouchthis: true
       perks.extras.bitchslap: true
       perks.extras.bitchslap.bypass.cooldown: true
       perks.extras.brofist: true
@@ -44,19 +45,35 @@ permissions:
       perks.extras.pickup.bypass.radius: true
       perks.extras.prefix: true
       perks.extras.pweather: true
+      perks.extras.pweather.others: true
       perks.extras.rainbowsheep: true
       perks.extras.slap: true
       perks.extras.slap.bypass.cooldown: true
-      perks.extras.canttouchthis: true
-  perks.extras.bitchslap.bypass.cooldown:
-    description: Bypass cooldown
   perks.extras.canttouchthis:
     description: Prevents a given player from being slapped or bitch slapped
+  perks.extras.bitchslap:
+    description: Permission for /bitchalsp command
+  perks.extras.bitchslap.bypass.cooldown:
+    description: Bypass cooldown for /bitchslap command
+  perks.extras.brofist:
+    description: Permission for /brofist command
+  perks.extras.highfive:
+    description: Permission for /highfive command
+  perks.extras.pickup:
+    description: Permission for /pickup command
+  perks.extras.pickup.bypass.cooldown:
+    description: Bypass cooldown on /pickup command
+  perks.extras.pickup.bypass.radius:
+    description: Bypass radius restrictions on /pickup radius
+  perks.extras.prefix:
+    description: Permission for /prefix command
+  perks.extras.pweather:
+    description: Permission for /pweather command
   perks.extras.pweather.others:
     description: Change the player specific weather for other players
-  perks.extras.pickup.bypass.cooldown:
-    description: Bypass cooldown
-  perks.extras.pickup.bypass.radius:
-    description: Bypass radius limitations
+  perks.extras.rainbowsheep:
+    description: Permission for /rainbowsheep command
+  perks.extras.slap:
+    description: Permission for /slap command
   perks.extras.slap.bypass.cooldown:
-    description: Bypass cooldown
+    description: Bypass cooldown on /slap command
