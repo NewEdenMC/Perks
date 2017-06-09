@@ -51,6 +51,10 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
+            <id>md-5-repo</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
+        </repository>
+        <repository>
             <id>NewEden</id>
             <url>http://ci.neweden.co/plugin/repository/everything/</url>
         </repository>
