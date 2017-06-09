@@ -22,24 +22,6 @@
             <version>1.11-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <!--<dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-config</artifactId>
-            <version>1.9-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-event</artifactId>
-            <version>1.9-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-chat</artifactId>
-            <version>1.9-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>-->
         <dependency>
             <groupId>com.vexsoftware</groupId>
             <artifactId>nuvotifier-bungeecord</artifactId>
