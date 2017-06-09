@@ -1,9 +1,9 @@
-name: Perks-Extras
+name: ${artifactId}
+version: ${version}
 main: co.neweden.perks.extras.Main
 author: AaronMcH
 description: Useful perks
 website: https://neweden.co/
-version: 1.0-RELEASE
 softdepend: [PermissionsEx]
 commands:
   bitchslap:

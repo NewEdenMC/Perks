@@ -1,9 +1,9 @@
-name: Perks
+name: ${artifactId}
+version: ${version}
 main: co.neweden.Perks.Main
 author: AaronMcH
 description: Perks plugin for New Eden
 website: https://neweden.co/
-version: 1.0-RELEASE
 depend: [MenuGUI]
 commands:
    perks:

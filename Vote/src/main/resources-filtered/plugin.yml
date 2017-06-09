@@ -1,5 +1,5 @@
-name: Perks
+name: ${artifactId}
+version: ${version}
 main: co.neweden.perks.Main
 author: AaronMcH
-version: 1.0-RELEASE
 depend: [NuVotifier]
