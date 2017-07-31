@@ -344,7 +344,7 @@ public class Main extends JavaPlugin implements Listener {
                 case CAN_PURCHASE: statusMessage = "&aYou can purchase this perk"; break;
             }
             slot.addHoverText("&f ");
-            slot.addHoverText(Util.formatString(statusMessage));
+            slot.addHoverText(statusMessage);
             if (ps.equals(Perk.PurchaseStatus.CAN_PURCHASE))
                 slot.setClickCommand("perks perk " + perk.getName() + " buy");
 
